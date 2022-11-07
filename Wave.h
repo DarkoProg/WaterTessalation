@@ -12,6 +12,11 @@
 #include <glm/vec3.hpp>
 #include <glm/glm.hpp>
 
+#include <cmath>
+#include <glm/ext/vector_float3.hpp>
+#include <glm/geometric.hpp>
+#include <iostream>
+#include <math.h>
 
 using namespace noise;
 
@@ -24,8 +29,7 @@ private:
 
     module::Perlin perlinModule;
     double SelectWaves(float x, float y, float t, float k, float wavelength, float amplitude, float speed, glm::vec3 direction);
-    glm::vec3 CreateTangent(float selectedWave, int x, int y);
-    glm::vec3 CreateNormal(float selectedWave, int x, int y);
+    glm::vec3 CreateNormal(int x, int y);
     glm::vec3 CalculateCircularDirection(glm::vec3 direction, glm::vec3 center);
     float Frequency(float wavelength);
 
@@ -39,7 +43,6 @@ public:
 
     Wave();
     void test();
-    void CreateWave(int image[500][500]);
 };
 
 #endif
