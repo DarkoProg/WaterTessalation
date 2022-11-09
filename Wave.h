@@ -28,10 +28,6 @@ private:
 
 
     module::Perlin perlinModule;
-    double SelectWaves(float x, float y, float t, float k, float wavelength, float amplitude, float speed, glm::vec3 direction);
-    glm::vec3 CreateNormal(int x, int y);
-    glm::vec3 CalculateCircularDirection(glm::vec3 direction, glm::vec3 center);
-    float Frequency(float wavelength);
 
 
 
@@ -42,7 +38,14 @@ public:
     static constexpr float PI = 3.14159f;
 
     Wave();
+
     void test();
+    double SelectWaves(float x, float y, float t, float k, float wavelength, float amplitude, float speed, glm::vec3 direction);
+    glm::mat3 Surf2World(int x, int y, double waveDerivitive);
+    glm::mat3 Tex2Surf();
+    glm::vec3 CalculateCircularDirection(glm::vec3 direction, glm::vec3 center);
+    float Frequency(float wavelength);
+    int MapToGrayscale(float amplitude, double wave);
 };
 
 #endif
