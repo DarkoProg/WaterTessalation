@@ -35,8 +35,8 @@ CFLAGS     := $(if $(DEBUG),-g -O, -O2)
 CFLAGS     += $(addprefix -I ,$(sort $(dir $(sources_h))))
 CXXFLAGS    = $(CFLAGS)
 LDFLAGS    := 
-LOADLIBES  += #-L/usr/include/mysql
-LDLIBS     += -lglfw -lrt -lm -ldl -lX11 -lpthread -lxcb -lXau -lXdmcp -lGL
+LOADLIBES  += -I/usr/local/include -L/usr/local/lib/ #-L/usr/include/mysql
+LDLIBS     += -lglfw -lrt -lm -ldl -lX11 -lpthread -lxcb -lXau -lXdmcp -lGL -lnoise
 
 # add vpath
 vpath %.h $(sort $(dir $(sources_h)))
