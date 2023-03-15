@@ -26,6 +26,8 @@ class Wave
 private:
 
 
+    int height;
+    int width;
 
     module::Perlin perlinModule;
 
@@ -38,6 +40,7 @@ public:
     static constexpr float PI = 3.14159f;
 
     Wave();
+    Wave(int inputHeight, int inputWidth);
 
     void test();
     double SelectWaves(float x, float y, float t, float k, float wavelength, float amplitude, float speed, glm::vec3 direction);

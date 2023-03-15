@@ -25,6 +25,7 @@
 #include "VAO.h"
 #include "VBO.h"
 #include "shaderClass.h"
+#include "Wave.h"
 
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -53,6 +54,7 @@ GLuint indices[] =
 
 int main()
 {
+    Wave wave;
 	// Initialize GLFW
 	glfwInit();
 
@@ -116,7 +118,8 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// load and generate the texture
-	int width, height, nrChannels;
+	int width = 1000;
+    int height = 1000;
 	unsigned char *data = stbi_load("image.png", &width, &height, &nrChannels, 0);
 	if (data)
 	{

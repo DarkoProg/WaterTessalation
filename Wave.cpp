@@ -1,9 +1,16 @@
 #include "Wave.h"
 #include <glm/ext/vector_float3.hpp>
 
-
 Wave::Wave()
 {
+    height = 1000;
+    width  = 1000;
+}
+
+Wave::Wave(int inputHeight, int inputWidth)
+{
+    height = inputHeight;
+    width  = inputWidth;
 }
 
 
@@ -12,12 +19,12 @@ void Wave::test()
     float maxValue = 0;
     float minValue = 0;
 
-    for(double t = 0; t < 4; t++)
+    for(double t = 0; t < 1; t++)
     {
         //starts at 1, otherwise the first pixel will be 0 always
-        for(double y = 1; y <= 10; y++)
+        for(double y = 1; y <= height; y++)
         {
-            for (double x = 1; x <= 10; x++) {
+            for (double x = 1; x <= width; x++) {
                 // !!!!!!!!!!!! rename ColorValue, ColorValue is gona be used for rgb values later !!!!!!!!!!!!!!!!
                 glm::vec3 dir = Wave::CalculateCircularDirection(glm::vec3 (x, y, 0), glm::vec3 (0, 0, 0));
 
