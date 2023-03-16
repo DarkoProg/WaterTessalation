@@ -26,8 +26,6 @@ class Wave
 private:
 
 
-    int height;
-    int width;
 
     module::Perlin perlinModule;
 
@@ -36,13 +34,17 @@ private:
 
 public:
 
+    int height;
+    int width;
     static constexpr float GRAVITY = 9.8f;
     static constexpr float PI = 3.14159f;
 
     Wave();
     Wave(int inputHeight, int inputWidth);
 
-    void test();
+    /* template<typename T, std::size_t N, std::size_t M> */
+    void test(int (*waveTexture));
+    /* void test(); */
     double SelectWaves(float x, float y, float t, float k, float wavelength, float amplitude, float speed, glm::vec3 direction);
     glm::mat3 Surf2World(int x, int y, double waveDerivitive);
     glm::mat3 Tex2Surf();

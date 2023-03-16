@@ -13,5 +13,3 @@ GOALS:
 5. [ ] Implement tessalation shader.
 6. [ ] Build UI
 7. [ ] Make Camera
-
-:warning: next time make Wave function take a 2d int* array fill it up and than pass it for texture

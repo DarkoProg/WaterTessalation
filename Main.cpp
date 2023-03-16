@@ -120,18 +120,21 @@ int main()
 	// load and generate the texture
 	int width = 1000;
     int height = 1000;
-	unsigned char *data = stbi_load("image.png", &width, &height, &nrChannels, 0);
-	if (data)
+	/* unsigned char *data = stbi_load("image.png", &width, &height, &nrChannels, 0); */
+    Wave Wave(width, height);
+    int data[width] [height];
+    wave.test(*data);
+	if (*data)
 	{
         std::cout << "zakaj";
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_INT, *data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
 	{
 		std::cout << "Failed to load texture" << std::endl;
 	}
-	stbi_image_free(data);
+	/* stbi_image_free(data); */
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))

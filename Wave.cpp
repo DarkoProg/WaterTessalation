@@ -13,8 +13,8 @@ Wave::Wave(int inputHeight, int inputWidth)
     width  = inputWidth;
 }
 
-
-void Wave::test()
+/* template<typename T, std::size_t N, std::size_t M> */
+void Wave::test(int (*waveTexture))
 {
     float maxValue = 0;
     float minValue = 0;
@@ -22,23 +22,25 @@ void Wave::test()
     for(double t = 0; t < 1; t++)
     {
         //starts at 1, otherwise the first pixel will be 0 always
-        for(double y = 1; y <= height; y++)
+        for(int y = 1; y <= height; y++)
         {
-            for (double x = 1; x <= width; x++) {
-                // !!!!!!!!!!!! rename ColorValue, ColorValue is gona be used for rgb values later !!!!!!!!!!!!!!!!
+            for (int x = 1; x <= width; x++) {
+                // !!!!!!!!!!!! rename colorValue, colorValue is gona be used for rgb values later !!!!!!!!!!!!!!!!
                 glm::vec3 dir = Wave::CalculateCircularDirection(glm::vec3 (x, y, 0), glm::vec3 (0, 0, 0));
 
                 float amplitude = 10;
                 float wavePointValue = SelectWaves(x, y, t, 1, 5, amplitude, 1, glm::vec3(-0.5f, -0.5f, 0)); 
 
-                float ColorValue = MapToGrayscale(amplitude, wavePointValue); 
-                /* glm::vec3 normal = Wave::CreateNormal(ColorValue, x, y); */
-                if (maxValue < ColorValue) maxValue = ColorValue;
-                if (minValue > ColorValue) minValue = ColorValue;
+                float colorValue = MapToGrayscale(amplitude, wavePointValue); 
+                /* glm::vec3 normal = Wave::CreateNormal(colorValue, x, y); */
+                if (maxValue < colorValue) maxValue = colorValue;
+                if (minValue > colorValue) minValue = colorValue;
                 ///map to rgb color (0-255)
                 //value -> (-1, 1) + 1 -> (0 , 2) -> (0, 255)
 
-                std::cout << ColorValue << "    ";
+                /* waveTexture = colorValue; */
+                *((waveTexture+(y-1)*width)+x-1) = colorValue; 
+                /* std::cout << *((waveTexture+(y-1)*width)+x-1) << "    "; */
             }
             
             std::cout << std::endl;
