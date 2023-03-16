@@ -13,3 +13,6 @@ GOALS:
 5. [ ] Implement tessalation shader.
 6. [ ] Build UI
 7. [ ] Make Camera
+
+
+:memo: need to make shaders proces textures
