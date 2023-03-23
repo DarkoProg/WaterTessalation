@@ -37,10 +37,10 @@ const unsigned int height = 800;
 // Vertices coordinates
 GLfloat vertices[] =
 {
-	-0.5f, -0.5f , 0.0f, // Lower left corner
-	0.5f, -0.5f , 0.0f, // Lower right corner
-	-0.5f, 0.5f , 0.0f, // Upper left
-	0.5f, 0.5f , 0.0f, // Upper right
+	-0.5f, -0.5f , 0.0f, 0.0f, 0.0f, // Lower left corner
+	 0.5f, -0.5f , 0.0f, 1.0f, 0.0f, // Lower right corner
+	-0.5f,  0.5f , 0.0f, 0.0f, 1.0f,// Upper left
+	 0.5f,  0.5f , 0.0f, 1.0f, 1.0f// Upper right
 };
 
 // Indices for vertices order
@@ -91,22 +91,6 @@ int main()
 
 
 
-	// Generates Vertex Array Object and binds it
-	VAO VAO1;
-	VAO1.Bind();
-
-	// Generates Vertex Buffer Object and links it to vertices
-	VBO VBO1(vertices, sizeof(vertices));
-	// Generates Element Buffer Object and links it to indices
-	EBO EBO1(indices, sizeof(indices));
-
-	// Links VBO to VAO
-	VAO1.LinkVBO(VBO1, 0);
-	// Unbind all to prevent accidentally modifying them
-	VAO1.Unbind();
-	VBO1.Unbind();
-	EBO1.Unbind();
-
 
     //image placeholder load
 	unsigned int texture;
@@ -118,16 +102,20 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// load and generate the texture
-	int width = 1000;
-    int height = 1000;
-	/* unsigned char *data = stbi_load("image.png", &width, &height, &nrChannels, 0); */
-    Wave Wave(width, height);
-    int data[width] [height];
+	/* int width = 1000; */
+    /* int height = 1000; */
+
+    std::cout << "1";
+    int widthImg = 1000;
+    int heightImg= 1000;
+	/* unsigned char* data = stbi_load("~/diplomska/ShaderTest/image.png", &widthImg, &heightImg, &numColCh, 0); */
+    Wave Wave(widthImg, heightImg);
+    int data[widthImg] [heightImg];
     wave.test(*data);
 	if (*data)
 	{
-        std::cout << "zakaj";
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_INT, *data);
+        /* std::cout << "zakaj"; */
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthImg, heightImg, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
@@ -135,6 +123,34 @@ int main()
 		std::cout << "Failed to load texture" << std::endl;
 	}
 	/* stbi_image_free(data); */
+
+    std::cout << "2";
+
+	// Generates Vertex Array Object and binds it
+	VAO VAO1;
+	VAO1.Bind();
+
+	// Generates Vertex Buffer Object and links it to vertices
+	VBO VBO1(vertices, sizeof(vertices));
+	// Generates Element Buffer Object and links it to indices
+	EBO EBO1(indices, sizeof(indices));
+
+
+	// Links VBO to VAO
+	/* VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 8*sizeof(float), (void*)0); */
+    VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
+    VAO1.LinkAttribute(VBO1, 1, 2, GL_FLOAT, 8 * sizeof(float), (void*)(3*sizeof(float)));
+	// Unbind all to prevent accidentally modifying them
+	VAO1.Unbind();
+	VBO1.Unbind();
+	EBO1.Unbind();
+
+    GLuint textureToUni = glGetUniformLocation(shaderProgram.ID, "gSampler");
+    shaderProgram.Activate();
+    glUniform1i(textureToUni, 0);
+
+    Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
+    std::cout << "3";
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -144,8 +160,16 @@ int main()
 		// Clean the back buffer and assign the new color to it
 		glClear(GL_COLOR_BUFFER_BIT);
 		// Tell OpenGL which Shader Program we want to use
-		shaderProgram.Activate();
 		// Bind the VAO so OpenGL knows to use it
+        //
+
+		// Handles camera inputs
+        float scale = 1;
+		camera.Inputs(window, scale);
+		// Updates and exports the camera matrix to the Vertex Shader
+		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
+
+        /* glBindTexture(GL_TEXTURE_2D, texture); */
 		VAO1.Bind();
 		// Draw primitives, number of indices, datatype of indices, index of indices
 		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
