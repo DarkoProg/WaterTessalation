@@ -48,8 +48,28 @@ GLuint indices[] =
 {
 	0, 1, 2, // Lower left triangle
 	1, 2, 3, // Lower right triangle
+    /* 0, 2, 3, */
+    /* 0, 1, 2 */
 };
 
+// Vertices coordinates
+	/* GLfloat vertices[] = */
+	/* { */
+	/* 	-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower left corner */
+	/* 	0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower right corner */
+	/* 	0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, // Upper corner */
+	/* 	-0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, // Inner left */
+	/* 	0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, // Inner right */
+	/* 	0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f // Inner down */
+	/* }; */
+
+	/* // Indices for vertices order */
+	/* GLuint indices[] = */
+	/* { */
+	/* 	0, 3, 5, // Lower left triangle */
+	/* 	3, 2, 4, // Lower right triangle */
+	/* 	5, 4, 1 // Upper triangle */
+	/* }; */
 
 
 int main()
@@ -104,8 +124,6 @@ int main()
 	// load and generate the texture
 	/* int width = 1000; */
     /* int height = 1000; */
-
-    std::cout << "1";
     int widthImg = 1000;
     int heightImg= 1000;
 	/* unsigned char* data = stbi_load("~/diplomska/ShaderTest/image.png", &widthImg, &heightImg, &numColCh, 0); */
@@ -122,10 +140,6 @@ int main()
 	{
 		std::cout << "Failed to load texture" << std::endl;
 	}
-	/* stbi_image_free(data); */
-
-    std::cout << "2";
-
 	// Generates Vertex Array Object and binds it
 	VAO VAO1;
 	VAO1.Bind();
@@ -138,8 +152,9 @@ int main()
 
 	// Links VBO to VAO
 	/* VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 8*sizeof(float), (void*)0); */
-    VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
-    VAO1.LinkAttribute(VBO1, 1, 2, GL_FLOAT, 8 * sizeof(float), (void*)(3*sizeof(float)));
+    VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 5 * sizeof(float), (void*)0);
+    /* VAO1.LinkAttribute(VBO1, 1, 2, GL_FLOAT, 8 * sizeof(float), (void*)(3*sizeof(float))); */
+    VAO1.LinkAttribute(VBO1, 1, 2, GL_FLOAT, 5 * sizeof(float), (void*)(3*sizeof(float)));
 	// Unbind all to prevent accidentally modifying them
 	VAO1.Unbind();
 	VBO1.Unbind();
@@ -149,8 +164,7 @@ int main()
     shaderProgram.Activate();
     glUniform1i(textureToUni, 0);
 
-    Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
-    std::cout << "3";
+    /* Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f)); */
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -164,10 +178,10 @@ int main()
         //
 
 		// Handles camera inputs
-        float scale = 1;
-		camera.Inputs(window, scale);
+        float scale = 0.5f;
+		/* camera.Inputs(window, scale); */
 		// Updates and exports the camera matrix to the Vertex Shader
-		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
+		/* camera.Matrix(0.0f, 0.0f, 100.0f, shaderProgram, "camMatrix"); */
 
         /* glBindTexture(GL_TEXTURE_2D, texture); */
 		VAO1.Bind();
@@ -177,6 +191,8 @@ int main()
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
 		glfwPollEvents();
+
+        /* std::cout << "x: " << camera.Position.x << " y: " << camera.Position.y << " z: " << camera.Position.z << std::endl; */
 	}
 
 
