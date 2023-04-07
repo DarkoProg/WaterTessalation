@@ -107,7 +107,7 @@ int main()
 
 
 	// Generates Shader object using shaders defualt.vert and default.frag
-	Shader shaderProgram("default.vert", "default.frag");
+	Shader shaderProgram("default.vert", "default.frag", "default.tcs", "default.tes");
 
 
 
@@ -183,10 +183,15 @@ int main()
 		// Updates and exports the camera matrix to the Vertex Shader
 		/* camera.Matrix(0.0f, 0.0f, 100.0f, shaderProgram, "camMatrix"); */
 
+        //just wirefram testing
+        /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
+
         /* glBindTexture(GL_TEXTURE_2D, texture); */
 		VAO1.Bind();
 		// Draw primitives, number of indices, datatype of indices, index of indices
 		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+        /* glPolygonMode(GL_FRONT, GL_FILL); */
+        /* glPolygonMode(GL_BACK, GL_FILL); */
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
