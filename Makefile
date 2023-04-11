@@ -5,6 +5,10 @@ all:
 DEBUG       := y
 TARGET_PROG := naloga02
 
+
+#file directories
+# INCLUDES := ./Libraries/include
+
 # project directory	
 DEBUG_DIR   := ./Debug
 RELEASE_DIR := ./Release
@@ -21,8 +25,9 @@ MV    := mv
 # init sources & objects & depends
 sources_all := $(shell find . -name "*.c" -o -name "*.cpp" -o -name "*.h")
 sources_c   := $(filter %.c, $(sources_all))
+# sources_c   := $(filter %.c, $(./Libraries/src))
 sources_cpp := $(filter %.cpp, $(sources_all))
-sources_h   := $(filter %.h, $(sources_all))
+sources_h   := $(filter %.h, $(sources_cpp))
 objs        := $(addprefix $(BIN_DIR)/,$(strip $(sources_cpp:.cpp=.o) $(sources_c:.c=.o)))
 deps        := $(addprefix $(BIN_DIR)/,$(strip $(sources_cpp:.cpp=.d) $(sources_c:.c=.d)))
 
@@ -32,17 +37,23 @@ $(foreach dirname,$(sort $(dir $(sources_c) $(sources_cpp))),\
 
 # complie & link variable
 CFLAGS     := $(if $(DEBUG),-g -O, -O2)
-CFLAGS     += $(addprefix -I ,$(sort $(dir $(sources_h))))
+# CFLAGS     += $(addprefix -I ,$(sort $(dir $(sources_h))))
+CFLAGS     += $(addprefix -I ,Libraries/include)
 CXXFLAGS    = $(CFLAGS)
 LDFLAGS    := 
 LOADLIBES  += -I/usr/local/include -L/usr/local/lib/ #-L/usr/include/mysql
 LDLIBS     += -lglfw -lrt -lm -ldl -lX11 -lpthread -lxcb -lXau -lXdmcp -lGL -lnoise
 
 # add vpath
-vpath %.h $(sort $(dir $(sources_h)))
+# vpath %.h $(sort $(dir $(sources_h)))
+# vpath %.c $(sort $(dir $(sources_c)))
+# vpath %.cpp $(sort $(dir $(sources_cpp)))
+# vpath %.h $(sort $(dir(./Libraries/include)))
+vpath %.h Libraries/include/ConnectingWithShaders
 vpath %.c $(sort $(dir $(sources_c)))
 vpath %.cpp $(sort $(dir $(sources_cpp)))
 
+$(info $$sources_h is [${sources_cpp}])
 # generate depend files
 # actually generate after object generated, beacasue it only used when next make)
 ifneq "$(MAKECMDGOALS)" "clean"
@@ -80,6 +91,7 @@ endef
 
 # call add-target
 $(foreach targ,$(TARGET_PROG),$(eval $(call add-target,$(targ),$(objs),$(CXX))))
+
 
 all: $(REAL_TARGET) $(TARGET_LIBS)
 
