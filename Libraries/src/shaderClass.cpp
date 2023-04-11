@@ -1,9 +1,10 @@
-#include"shaderClass.h"
+#include"../include/shaderClass.h"
 #include <string>
 
 // Reads a text file and outputs a string with everything in the text file
 std::string get_file_contents(const char* filename)
 {
+	/* std::ifstream in(filename, std::ios::binary); */
 	std::ifstream in(filename, std::ios::binary);
 	if (in)
 	{
@@ -25,14 +26,17 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile, const char* tes
 	// Read vertexFile and fragmentFile and store the strings
 	std::string vertexCode = get_file_contents(vertexFile);
 	std::string fragmentCode = get_file_contents(fragmentFile);
-    std::string tessalationControlCode = get_file_contents(tessalationControlFile);
-    std::string tessalationEvaluationCode = get_file_contents(tessalationEvaluationFile);
+    /* std::string tessalationControlCode = get_file_contents(tessalationControlFile); */
+    /* std::string tessalationEvaluationCode = get_file_contents(tessalationEvaluationFile); */
 
 	// Convert the shader source strings into character arrays
 	const char* vertexSource = vertexCode.c_str();
 	const char* fragmentSource = fragmentCode.c_str();
-    const char* tessalationControlSource = tessalationControlCode.c_str();
-    const char* tessalationEvaluationSource = tessalationEvaluationCode.c_str();
+    /* const char* tessalationControlSource = tessalationControlCode.c_str(); */
+    /* const char* tessalationEvaluationSource = tessalationEvaluationCode.c_str(); */
+
+
+    std::cout << "vert";
 
 	// Create Vertex Shader Object and get its reference
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -43,6 +47,7 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile, const char* tes
 	// Checks if Shader compiled succesfully
 	compileErrors(vertexShader, "VERTEX");
 
+    std::cout << "frag";
 	// Create Fragment Shader Object and get its reference
 	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	// Attach Fragment Shader source to the Fragment Shader Object
@@ -51,6 +56,7 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile, const char* tes
 	glCompileShader(fragmentShader);
 	// Checks if Shader compiled succesfully
 	compileErrors(fragmentShader, "FRAGMENT");
+    std::cout << "after";
 
     /* GLuint tessalationControlShader = glCreateShader(GL_TESS_CONTROL_SHADER); */
     /* glShaderSource(tessalationControlShader, 1, &tessalationControlSource, NULL); */
