@@ -107,7 +107,7 @@ int main()
 
 	// Generates Shader object using shaders defualt.vert and default.frag
 	/* Shader shaderProgram("../Shaders/default.vert", "../Shaders/default.frag", "../Shaders/default.tcs", "../Shaders/default.tes"); */
-	Shader shaderProgram("Libraries/Shaders/default.vert", "Libraries/Shaders/default.frag", "Libraries/Shaders/default.tcs", "Libraries/Shaders/default.tes");
+	Shader shaderProgram("Libraries/Shaders/default.vert", "Libraries/Shaders/default.frag", "Libraries/Shaders/default.tesc", "Libraries/Shaders/default.tese");
 
 
 

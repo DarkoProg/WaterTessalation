@@ -1,4 +1,4 @@
-#include "Wave.h"
+#include "../include/Wave.h"
 #include <glm/ext/vector_float3.hpp>
 
 Wave::Wave()
@@ -43,11 +43,8 @@ void Wave::test(int (*waveTexture))
                 /* std::cout << *((waveTexture+(y-1)*width)+x-1) << "    "; */
             }
             
-            std::cout << std::endl;
         }
 
-        std::cout << std::endl;
-        std::cout << std::endl;
     }
     /* std::cout << "max: " << maxValue << std::endl; */
     /* std::cout << "min: " << minValue << std::endl; */
