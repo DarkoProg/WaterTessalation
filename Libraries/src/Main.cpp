@@ -45,8 +45,9 @@ GLfloat vertices[] =
 // Indices for vertices order
 GLuint indices[] =
 {
-	0, 1, 2, // Lower left triangle
-	1, 2, 3, // Lower right triangle
+    3, 2, 0, 1
+	/* 0, 1, 2, // Lower left triangle */
+	/* 1, 2, 3, // Lower right triangle */
     /* 0, 2, 3, */
     /* 0, 1, 2 */
 };
@@ -189,7 +190,9 @@ int main()
         /* glBindTexture(GL_TEXTURE_2D, texture); */
 		VAO1.Bind();
 		// Draw primitives, number of indices, datatype of indices, index of indices
-		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+		/* glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0); */
+		glDrawElements(GL_PATCHES, 9, GL_UNSIGNED_INT, 0); //maybe wrong
+
         /* glPolygonMode(GL_FRONT, GL_FILL); */
         /* glPolygonMode(GL_BACK, GL_FILL); */
 		// Swap the back buffer with the front buffer
