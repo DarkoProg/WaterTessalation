@@ -175,7 +175,7 @@ int main()
 	// Generates Vertex Buffer Object and links it to vertices
 	VBO VBO1(vertices, sizeof(vertices));
 	// Generates Element Buffer Object and links it to indices
-	EBO EBO1(indices, sizeof(indices));
+	/* EBO EBO1(indices, sizeof(indices)); */
 
 
 	// Links VBO to VAO
@@ -186,7 +186,7 @@ int main()
 	// Unbind all to prevent accidentally modifying them
 	VAO1.Unbind();
 	VBO1.Unbind();
-	EBO1.Unbind();
+	/* EBO1.Unbind(); */
 
     GLuint textureToUni = glGetUniformLocation(shaderProgram.ID, "gSampler");
     shaderProgram.Activate();
@@ -235,7 +235,7 @@ int main()
 	// Delete all the objects we've created
 	VAO1.Delete();
 	VBO1.Delete();
-	EBO1.Delete();
+	/* EBO1.Delete(); */
 	shaderProgram.Delete();
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
