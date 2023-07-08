@@ -33,44 +33,70 @@
 const unsigned int width = 800;
 const unsigned int height = 800;
 
-// Vertices coordinates
-GLfloat vertices[] =
+/* // Vertices coordinates */
+/* GLfloat vertices[] = */
+/* { */
+/* 	-0.5f, -0.5f , 0.0f, 0.0f, 0.0f, // Lower left corner */
+/* 	 0.5f, -0.5f , 0.0f, 1.0f, 0.0f, // Lower right corner */
+/* 	-0.5f,  0.5f , 0.0f, 0.0f, 1.0f,// Upper left */
+/* 	 0.5f,  0.5f , 0.0f, 1.0f, 1.0f// Upper right */
+/* }; */
+
+/* // Indices for vertices order */
+/* GLuint indices[] = */
+/* { */
+/*     3, 2, 0, 1 */
+/* 	/1* 0, 1, 2, // Lower left triangle *1/ */
+/* 	/1* 1, 2, 3, // Lower right triangle *1/ */
+/*     /1* 0, 2, 3, *1/ */
+/*     /1* 0, 1, 2 *1/ */
+/* }; */
+
+std::vector<float> vertices;
+
+void GenVertices(unsigned numberOfPatches)
 {
-	-0.5f, -0.5f , 0.0f, 0.0f, 0.0f, // Lower left corner
-	 0.5f, -0.5f , 0.0f, 1.0f, 0.0f, // Lower right corner
-	-0.5f,  0.5f , 0.0f, 0.0f, 1.0f,// Upper left
-	 0.5f,  0.5f , 0.0f, 1.0f, 1.0f// Upper right
-};
+    for(unsigned i = 0; i < numberOfPatches; i++)
+    {
+        for (unsigned j = 0; j < numberOfPatches; j++)
+        {
+            /*  vertice stucture
+             *
+             *  x
+             *  y
+             *  z
+             *  u
+             *  v
+             *
+             * */
 
-// Indices for vertices order
-GLuint indices[] =
-{
-    3, 2, 0, 1
-	/* 0, 1, 2, // Lower left triangle */
-	/* 1, 2, 3, // Lower right triangle */
-    /* 0, 2, 3, */
-    /* 0, 1, 2 */
-};
+             vertices.push_back((-(float)width/2.0f + (float)width*i/(float)numberOfPatches)); 
+             vertices.push_back(0.0f);
+             vertices.push_back((-(float)height/2.0f + (float)height*j/(float)numberOfPatches)); 
+             vertices.push_back(i / (float)numberOfPatches);
+             vertices.push_back(j / (float)numberOfPatches);
 
-// Vertices coordinates
-	/* GLfloat vertices[] = */
-	/* { */
-	/* 	-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower left corner */
-	/* 	0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f, // Lower right corner */
-	/* 	0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f, // Upper corner */
-	/* 	-0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, // Inner left */
-	/* 	0.5f / 2, 0.5f * float(sqrt(3)) / 6, 0.0f, // Inner right */
-	/* 	0.0f, -0.5f * float(sqrt(3)) / 3, 0.0f // Inner down */
-	/* }; */
+             vertices.push_back((-(float)width/2.0f + (float)width*(i+1)/(float)numberOfPatches)); 
+             vertices.push_back(0.0f);
+             vertices.push_back((-(float)height/2.0f + (float)height*j/(float)numberOfPatches)); 
+             vertices.push_back((i+1) / (float)numberOfPatches);
+             vertices.push_back(j / (float)numberOfPatches);
 
-	/* // Indices for vertices order */
-	/* GLuint indices[] = */
-	/* { */
-	/* 	0, 3, 5, // Lower left triangle */
-	/* 	3, 2, 4, // Lower right triangle */
-	/* 	5, 4, 1 // Upper triangle */
-	/* }; */
+             vertices.push_back((-(float)width/2.0f + (float)width*i/(float)numberOfPatches)); 
+             vertices.push_back(0.0f);
+             vertices.push_back((-(float)height/2.0f + (float)height*(j+1)/(float)numberOfPatches)); 
+             vertices.push_back(i / (float)numberOfPatches);
+             vertices.push_back((j+1) / (float)numberOfPatches);
 
+             vertices.push_back((-(float)width/2.0f + (float)width*(i+1)/(float)numberOfPatches)); 
+             vertices.push_back(0.0f);
+             vertices.push_back((-(float)height/2.0f + (float)height*(j+1)/(float)numberOfPatches)); 
+             vertices.push_back((i+1) / (float)numberOfPatches);
+             vertices.push_back((j+1) / (float)numberOfPatches);
+        }
+    }
+
+}
 
 int main()
 {
@@ -112,6 +138,7 @@ int main()
 
 
 
+    glPatchParameteri(GL_PATCH_VERTICES, 4);
 
     //image placeholder load
 	unsigned int texture;
