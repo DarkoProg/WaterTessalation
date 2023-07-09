@@ -5,8 +5,8 @@ out vec4 FragColor;
 
 
 // Inputs the color from the Vertex Shader
-in vec3 color;  
-in vec2 Texture_CS_in;
+//in vec3 color;  
+//in vec2 Texture_CS_in;
 in float Height;
 
 uniform sampler2D gSampler;

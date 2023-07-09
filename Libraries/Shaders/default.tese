@@ -8,12 +8,12 @@ uniform mat4 view;
 uniform mat4 projection;
 
 
-in vec3 Position_ES_in[];
+in vec4 Position_ES_in[];
 in vec2 Texture_ES_in[];
 //in vec3 Normal_ES_in;
 
-out vec3 Position_FS_in;
-in vec2 Texture_FS_in;
+//out vec4 Position_FS_in;
+//in vec2 Texture_FS_in;
 out float Height;
 //in vec3 Normal_FS_in;
 
@@ -25,11 +25,11 @@ vec2 InterpolateVec2(float uCordinate, float vCordinate, vec2 texCord00, vec2 te
     return interpolatedCord;
 }
 
-vec2 InterpolateVec4(float uCordinate, float vCordinate, vec2 position00, vec2 position01, vec2 position10, vec2 position11)
+vec4 InterpolateVec4(float uCordinate, float vCordinate, vec4 position00, vec4 position01, vec4 position10, vec4 position11)
 {
-    vec2 position0 = (position01 - position00) * uCordinate + position00;
-    vec2 position1 = (position11 - position10) * uCordinate + position10;
-    vec2 interpolatedCord = (position1 - position0) * vCordinate + position0;
+    vec4 position0 = (position01 - position00) * uCordinate + position00;
+    vec4 position1 = (position11 - position10) * uCordinate + position10;
+    vec4 interpolatedCord = (position1 - position0) * vCordinate + position0;
     return interpolatedCord;
 }
 
@@ -67,7 +67,7 @@ void main()
     vec4 interpolatedPositionCord = InterpolateVec4(uCordinate, vCordinate, position00, position01, position10, position11);
 
      //displace patch point along normal
-    interpolatedPositionCord += normal + Height;
+    interpolatedPositionCord += patchNormal + Height;
 
     gl_Position = projection * view * model * interpolatedPositionCord;
 }

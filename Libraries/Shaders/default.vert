@@ -25,7 +25,7 @@ void main()
 	//gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0); 
 //	gl_Position = vec4(Position_VS_in.x, Position_VS_in.y, Position_VS_in.z, 1.0); 
 	//Position_CS_in = vec4(Position_VS_in.x, Position_VS_in.y, Position_VS_in.z, 1.0); 
-    Position_CS_in = vec4(Position_VS_in, 1.0) //might change with PMV
+    Position_CS_in = vec4(Position_VS_in, 1.0); //might change with PMV
     Texture_CS_in = Texture_VS_in;
 	// Assigns the colors from the Vertex Data to "color"
 	// color = aNormal;

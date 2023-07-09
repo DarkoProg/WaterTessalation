@@ -15,4 +15,4 @@ GOALS:
 7. [ ] Make Camera
 
 
-:memo: NEXT -> need to make shaders proces textures
+:memo: NEXT -> implement PVM in Main.cpp 

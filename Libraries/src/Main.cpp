@@ -69,7 +69,6 @@ void GenVertices(unsigned numberOfPatches)
              *  v
              *
              * */
-
              vertices.push_back((-(float)width/2.0f + (float)width*i/(float)numberOfPatches)); 
              vertices.push_back(0.0f);
              vertices.push_back((-(float)height/2.0f + (float)height*j/(float)numberOfPatches)); 
@@ -100,6 +99,14 @@ void GenVertices(unsigned numberOfPatches)
 
 int main()
 {
+    unsigned numberOfPatches = 1;
+    GenVertices(numberOfPatches);
+
+    for(int i = 0; i < vertices.size(); i++)
+    {
+        std::cout << vertices[i] << std::endl;
+    }
+
     Wave wave;
 	// Initialize GLFW
 	glfwInit();
@@ -113,7 +120,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Create a GLFWwindow object of 800 by 800 pixels, naming it "YoutubeOpenGL"
-	GLFWwindow* window = glfwCreateWindow(800, 800, "YoutubeOpenGL", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(800, 800, "Diplomska", NULL, NULL);
 	// Error check if the window fails to create
 	if (window == NULL)
 	{
@@ -218,7 +225,7 @@ int main()
 		VAO1.Bind();
 		// Draw primitives, number of indices, datatype of indices, index of indices
 		/* glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0); */
-		glDrawElements(GL_PATCHES, 9, GL_UNSIGNED_INT, 0); //maybe wrong
+		glDrawArrays(GL_PATCHES, 0, 4*4*numberOfPatches); //maybe wrong
 
         /* glPolygonMode(GL_FRONT, GL_FILL); */
         /* glPolygonMode(GL_BACK, GL_FILL); */

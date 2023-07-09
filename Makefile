@@ -3,7 +3,7 @@ all:
 
 # annotation when release version
 DEBUG       := y
-TARGET_PROG := naloga02
+TARGET_PROG := Diploma.debug
 
 
 #file directories
