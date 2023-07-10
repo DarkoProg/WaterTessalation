@@ -101,13 +101,14 @@ void GenVertices(unsigned numberOfPatches)
 
 int main()
 {
+    float scale = 1.0f;
     unsigned numberOfPatches = 1;
     GenVertices(numberOfPatches);
 
-    for(int i = 0; i < vertices.size(); i++)
-    {
-        std::cout << vertices[i] << std::endl;
-    }
+    /* for(int i = 0; i < vertices.size(); i++) */
+    /* { */
+    /*     std::cout << vertices[i] << std::endl; */
+    /* } */
 
     Wave wave;
 	// Initialize GLFW
@@ -204,12 +205,14 @@ int main()
     /* Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f)); */
 
 
-    glm::mat4 projection = glm::perspectiveFov(glm::radians(45.5f), (float)width, (float) height, 0.1f, 100.0f);
+    /* glm::mat4 projection = glm::perspectiveFov(glm::radians(45.5f), (float)width, (float) height, 0.1f, 100.0f); */
 
-    glm::mat4 view = glm::lookAt(glm::vec3(1,1,1), glm::vec3(0,0,0), glm::vec3(0,1,0));
+    /* glm::mat4 view = glm::lookAt(glm::vec3(1,1,1), glm::vec3(0,0,0), glm::vec3(0,1,0)); */
 
     glm::mat4 model = glm::mat4(1.0f);
 
+
+    Camera camera(width, height, glm::vec3(1,1,1));
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -224,10 +227,13 @@ int main()
         GLuint viewID = glGetUniformLocation(shaderProgram.ID, "view");
         GLuint projectionID = glGetUniformLocation(shaderProgram.ID, "projection");
 
-        glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]);
-        glUniformMatrix4fv(viewID, 1, GL_FALSE, &view[0][0]);
-        glUniformMatrix4fv(projectionID, 1, GL_FALSE, &projection[0][0]);
 
+        camera.Inputs(window, scale);
+
+        glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]);
+        /* glUniformMatrix4fv(viewID, 1, GL_FALSE, &view[0][0]); */
+        /* glUniformMatrix4fv(projectionID, 1, GL_FALSE, &projection[0][0]); */
+        camera.Matrix(45.5f, 0.1f, 100.0f, shaderProgram, "PV");
 
 		// Handles camera inputs
         float scale = 0.5f;

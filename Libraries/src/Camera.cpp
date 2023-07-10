@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include "../include/Camera.h"
 #include <GLFW/glfw3.h>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/fwd.hpp>
@@ -90,4 +90,6 @@ void Camera::Inputs(GLFWwindow *window, float &scale)
 	{
 		ProjectionType = 2;
 	}
+
+    std::cout << "x: " << Position.x << " y: " << Position.y << " z: " << Position.z << std::endl;
 }
