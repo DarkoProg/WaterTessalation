@@ -13,7 +13,7 @@ uniform sampler2D gSampler;
 
 void main()
 {
-    float heightColor = (Height + 16) / 32.0f;
+    float heightColor = 125;//(Height + 16) / 32.0f;
 	FragColor = vec4(heightColor, heightColor, heightColor, 1.0f); 
     //FragColor = texture(gSampler, Texture_CS_in);
 }
