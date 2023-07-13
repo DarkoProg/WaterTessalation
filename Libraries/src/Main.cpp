@@ -35,24 +35,6 @@
 const unsigned int width = 800;
 const unsigned int height = 800;
 
-/* // Vertices coordinates */
-/* GLfloat vertices[] = */
-/* { */
-/* 	-0.5f, -0.5f , 0.0f, 0.0f, 0.0f, // Lower left corner */
-/* 	 0.5f, -0.5f , 0.0f, 1.0f, 0.0f, // Lower right corner */
-/* 	-0.5f,  0.5f , 0.0f, 0.0f, 1.0f,// Upper left */
-/* 	 0.5f,  0.5f , 0.0f, 1.0f, 1.0f// Upper right */
-/* }; */
-
-/* // Indices for vertices order */
-/* GLuint indices[] = */
-/* { */
-/*     3, 2, 0, 1 */
-/* 	/1* 0, 1, 2, // Lower left triangle *1/ */
-/* 	/1* 1, 2, 3, // Lower right triangle *1/ */
-/*     /1* 0, 2, 3, *1/ */
-/*     /1* 0, 1, 2 *1/ */
-/* }; */
 
 std::vector<float> vertices;
 
@@ -102,13 +84,14 @@ void GenVertices(unsigned numberOfPatches)
 int main()
 {
     float scale = 1.0f;
-    unsigned numberOfPatches = 1;
+    unsigned numberOfPatches = 2;
     GenVertices(numberOfPatches);
 
-    /* for(int i = 0; i < vertices.size(); i++) */
-    /* { */
-    /*     std::cout << vertices[i] << std::endl; */
-    /* } */
+    std::cout << sizeof(vertices) << std::endl;
+    for(int i = 0; i < vertices.size(); i++)
+    {
+        std::cout << vertices[i] << std::endl;
+    }
 
     Wave wave;
 	// Initialize GLFW
@@ -187,17 +170,21 @@ int main()
 	VAO1.Bind();
 
 	// Generates Vertex Buffer Object and links it to vertices
-	VBO VBO1(vertices, sizeof(vertices));
+	/* VBO VBO1(vertices, sizeof(vertices)); */
+	VBO VBO1(vertices, vertices.size() * sizeof(float));
 	// Generates Element Buffer Object and links it to indices
 	/* EBO EBO1(indices, sizeof(indices)); */
 
 
 	// Links VBO to VAO
 	/* VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 8*sizeof(float), (void*)0); */
-    VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 5 * sizeof(float), (void*)0);
+    /* VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 5 * sizeof(float), (void*)0); */
     /* VAO1.LinkAttribute(VBO1, 1, 2, GL_FLOAT, 8 * sizeof(float), (void*)(3*sizeof(float))); */
-    VAO1.LinkAttribute(VBO1, 1, 2, GL_FLOAT, 5 * sizeof(float), (void*)(3*sizeof(float)));
+    /* VAO1.LinkAttribute(VBO1, 1, 2, GL_FLOAT, 5 * sizeof(float), (void*)(3*sizeof(float))); */
 	// Unbind all to prevent accidentally modifying them
+    VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 5*sizeof(float), (void*)0);
+    VAO1.LinkAttribute(VBO1, 1, 2, GL_FLOAT, 5*sizeof(float), (void*)(3*sizeof(float)));
+
 	VAO1.Unbind();
 	VBO1.Unbind();
 	/* EBO1.Unbind(); */

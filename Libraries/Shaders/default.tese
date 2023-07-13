@@ -8,7 +8,7 @@ uniform mat4 view;
 uniform mat4 projection;
 
 
-in vec4 Position_ES_in[];
+//in vec4 Position_ES_in[];
 in vec2 Texture_ES_in[];
 //in vec3 Normal_ES_in;
 
