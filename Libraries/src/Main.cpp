@@ -189,7 +189,7 @@ int main()
 	VBO1.Unbind();
 	/* EBO1.Unbind(); */
 
-    GLuint textureToUni = glGetUniformLocation(shaderProgram.ID, "gSampler");
+    GLuint textureToUni = glGetUniformLocation(shaderProgram.ID, "heightMap");
     shaderProgram.Activate();
     glUniform1i(textureToUni, 0);
 
