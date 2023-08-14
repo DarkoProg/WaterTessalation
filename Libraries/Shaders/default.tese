@@ -4,30 +4,24 @@ layout (quads, equal_spacing, ccw) in;
 
 in vec2 uvsCoord[];
 out vec2 uvs;
+out
 
 void main()
 {
     float u = gl_TessCoord.x;
     float v = gl_TessCoord.y;
 
-    vec2 uv0 = uvsCoord[0];
-    vec2 uv1 = uvsCoord[1];
-    vec2 uv2 = uvsCoord[2];
-    vec2 uv3 = uvsCoord[3];
+    vec4 p0 = gl_in[0].gl_Position;
+    vec4 p1 = gl_in[1].gl_Position;
+    vec4 p2 = gl_in[2].gl_Position;
+    vec4 p3 = gl_in[3].gl_Position;
 
-    vec2 leftUV = uv0 + v * (uv3 - uv0);
-    vec2 rightUV = uv1 + v * (uv2 - uv1);
-    vec2 texCoord = leftUV + u * (rightUV - leftUV);
+    gl_Position = p0 * (1 - u) * (1 - v) + p1 * u * (1 - v) + p2 * u * v + p3 * (1 - u) * v;
 
-    vec4 pos0 = gl_in[0].gl_Position;
-    vec4 pos1 = gl_in[1].gl_Position;
-    vec4 pos2 = gl_in[2].gl_Position;
-    vec4 pos3 = gl_in[3].gl_Position;
+    vec3 c0 = uvsCoord[0];
+    vec3 c1 = uvsCoord[1];
+    vec3 c2 = uvsCoord[2];
+    vec3 c3 = uvsCoord[3];
 
-    vec4 leftPos = pos0 + v * (pos3 - pos0);
-    vec4 rightPos = pos1 + v * (pos2 - pos1);
-    vec4 pos = leftPos + u * (rightPos - leftPos);
-
-    gl_Position = pos; // Matrix transformations go here
-    uvs = texCoord;
+    uvs = c0 * (1 - u) * (1 - v) + c1 * u * (1 - v) + c2 * u * v + c3 * (1 - u) * v;
 }
