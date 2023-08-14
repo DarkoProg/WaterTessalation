@@ -85,8 +85,8 @@ GLfloat vertices[] =
 {
 	-0.5f, -0.5f , 0.0f, 0.0f, 0.0f, // Lower left corner
 	 0.5f, -0.5f , 0.0f, 1.0f, 0.0f, // Lower right corner
-	-0.5f,  0.5f , 0.0f, 0.0f, 1.0f,// Upper left
-	 0.5f,  0.5f , 0.0f, 1.0f, 1.0f// Upper right
+	 0.5f,  0.5f , 0.0f, 1.0f, 1.0f, // Upper right
+	-0.5f,  0.5f , 0.0f, 0.0f, 1.0f  // Upper left
 };
 
 int main()
@@ -241,7 +241,7 @@ int main()
 		/* camera.Matrix(0.0f, 0.0f, 100.0f, shaderProgram, "camMatrix"); */
 
         //just wirefram testing
-        /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         /* glBindTexture(GL_TEXTURE_2D, texture); */
 		VAO1.Bind();
@@ -249,7 +249,7 @@ int main()
 		/* glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0); */
 		glDrawArrays(GL_PATCHES, 0, 4); //maybe wrong
 
-        glPolygonMode(GL_FRONT, GL_FILL);
+        /* glPolygonMode(GL_FRONT, GL_FILL); */
         /* glPolygonMode(GL_BACK, GL_FILL); */
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
