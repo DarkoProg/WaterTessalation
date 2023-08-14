@@ -16,15 +16,17 @@ out vec2 Texture_ES_in[];
 
 void main()
 {
+    int tessNum = 16;
+
     gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
     Texture_ES_in[gl_InvocationID] = Texture_CS_in[gl_InvocationID];
     //Position_ES_in[gl_InvocationID] = Position_CS_in[gl_InvocationID];
 
-    gl_TessLevelOuter[0] = 2;
-    gl_TessLevelOuter[1] = 8;
-    gl_TessLevelOuter[2] = 8;
-    gl_TessLevelOuter[3] = 2;
+    gl_TessLevelOuter[0] = tessNum;
+    gl_TessLevelOuter[1] = tessNum;
+    gl_TessLevelOuter[2] = tessNum;
+    gl_TessLevelOuter[3] = tessNum;
 
-    gl_TessLevelInner[0] = 10;
-    gl_TessLevelInner[1] = 2;
+    gl_TessLevelInner[0] = tessNum;
+    gl_TessLevelInner[1] = tessNum;
 }

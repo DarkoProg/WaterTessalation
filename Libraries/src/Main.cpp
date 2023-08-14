@@ -201,7 +201,7 @@ int main()
     shaderProgram.Activate();
     glUniform1i(textureToUni, 0);
 
-    /* Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f)); */
+    Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
 
     /* glm::mat4 projection = glm::perspectiveFov(glm::radians(45.5f), (float)width, (float) height, 0.1f, 100.0f); */
@@ -222,26 +222,26 @@ int main()
 		// Tell OpenGL which Shader Program we want to use
 		// Bind the VAO so OpenGL knows to use it
         
-        GLuint modelID = glGetUniformLocation(shaderProgram.ID, "model");
-        GLuint viewID = glGetUniformLocation(shaderProgram.ID, "view");
-        GLuint projectionID = glGetUniformLocation(shaderProgram.ID, "projection");
+        /* GLuint modelID = glGetUniformLocation(shaderProgram.ID, "M"); */
+        /* GLuint viewID = glGetUniformLocation(shaderProgram.ID, "view"); */
+        /* GLuint projectionID = glGetUniformLocation(shaderProgram.ID, "projection"); */
 
 
-        /* camera.Inputs(window, scale); */
+        camera.Inputs(window, scale);
 
         /* glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]); */
         /* glUniformMatrix4fv(viewID, 1, GL_FALSE, &view[0][0]); */
         /* glUniformMatrix4fv(projectionID, 1, GL_FALSE, &projection[0][0]); */
-        /* camera.Matrix(45.5f, 0.1f, 100.0f, shaderProgram, "PV"); */
+        camera.Matrix(45.5f, 0.1f, 100.0f, shaderProgram, "PV");
 
 		// Handles camera inputs
         float scale = 0.5f;
-		/* camera.Inputs(window, scale); */
+		camera.Inputs(window, scale);
 		// Updates and exports the camera matrix to the Vertex Shader
 		/* camera.Matrix(0.0f, 0.0f, 100.0f, shaderProgram, "camMatrix"); */
 
         //just wirefram testing
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
 
         /* glBindTexture(GL_TEXTURE_2D, texture); */
 		VAO1.Bind();

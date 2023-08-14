@@ -91,5 +91,5 @@ void Camera::Inputs(GLFWwindow *window, float &scale)
 		ProjectionType = 2;
 	}
 
-    /* std::cout << "x: " << Position.x << " y: " << Position.y << " z: " << Position.z << std::endl; */
+    std::cout << "x: " << Position.x << " y: " << Position.y << " z: " << Position.z << std::endl;
 }
