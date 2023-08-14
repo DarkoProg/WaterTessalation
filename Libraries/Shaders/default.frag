@@ -1,12 +1,21 @@
 #version 400 core
 
+// Outputs colors in RGBA
 out vec4 FragColor;
-in vec2 uvs;
 
-uniform sampler2D heightMap;
+
+// Inputs the color from the Vertex Shader
+//in vec3 color;  
+//in vec2 Texture_CS_in;
+/* in float Height; */
+in vec2 Texture_FS_in;
+
+uniform sampler2D gSampler;
 
 void main()
 {
-	FragColor = vec4(0.965, 0.318, 0.000, 1.0);
-	/* FragColor = vec4(uvs + 1.0, 0.000, 1.0)/2.0; */
+    /* float heightColor = 125;//(Height + 16) / 32.0f; */
+	/* FragColor = vec4(heightColor, heightColor, heightColor, 1.0f); */ 
+    FragColor = vec4(Texture_FS_in, 0.02f, 1.0f);
+    //FragColor = texture(gSampler, Texture_CS_in);
 }

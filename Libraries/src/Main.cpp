@@ -35,7 +35,7 @@
 const unsigned int width = 800;
 const unsigned int height = 800;
 
-
+/*
 std::vector<float> vertices;
 
 void GenVertices(unsigned numberOfPatches)
@@ -44,7 +44,7 @@ void GenVertices(unsigned numberOfPatches)
     {
         for (unsigned j = 0; j < numberOfPatches; j++)
         {
-            /*  vertice stucture
+            // *  vertice stucture
              *
              *  x
              *  y
@@ -52,7 +52,7 @@ void GenVertices(unsigned numberOfPatches)
              *  u
              *  v
              *
-             * */
+            // * 
              vertices.push_back((-(float)width/2.0f + (float)width*i/(float)numberOfPatches)); 
              vertices.push_back(0.0f);
              vertices.push_back((-(float)height/2.0f + (float)height*j/(float)numberOfPatches)); 
@@ -79,19 +79,27 @@ void GenVertices(unsigned numberOfPatches)
         }
     }
 
-}
+}*/
+
+GLfloat vertices[] =
+{
+	-0.5f, -0.5f , 0.0f, 0.0f, 0.0f, // Lower left corner
+	 0.5f, -0.5f , 0.0f, 1.0f, 0.0f, // Lower right corner
+	-0.5f,  0.5f , 0.0f, 0.0f, 1.0f,// Upper left
+	 0.5f,  0.5f , 0.0f, 1.0f, 1.0f// Upper right
+};
 
 int main()
 {
     float scale = 1.0f;
-    unsigned numberOfPatches = 2;
-    GenVertices(numberOfPatches);
+    unsigned numberOfPatches = 1;
+    /* GenVertices(numberOfPatches); */
 
-    std::cout << sizeof(vertices) << std::endl;
-    for(int i = 0; i < vertices.size(); i++)
-    {
-        std::cout << vertices[i] << std::endl;
-    }
+    /* std::cout << sizeof(vertices) << std::endl; */
+    /* for(int i = 0; i < vertices.size(); i++) */
+    /* { */
+    /*     std::cout << vertices[i] << std::endl; */
+    /* } */
 
     Wave wave;
 	// Initialize GLFW
@@ -170,8 +178,8 @@ int main()
 	VAO1.Bind();
 
 	// Generates Vertex Buffer Object and links it to vertices
-	/* VBO VBO1(vertices, sizeof(vertices)); */
-	VBO VBO1(vertices, vertices.size() * sizeof(float));
+	VBO VBO1(vertices, sizeof(vertices));
+	/* VBO VBO1(vertices, vertices.size() * sizeof(float)); */
 	// Generates Element Buffer Object and links it to indices
 	/* EBO EBO1(indices, sizeof(indices)); */
 
@@ -200,10 +208,10 @@ int main()
 
     /* glm::mat4 view = glm::lookAt(glm::vec3(1,1,1), glm::vec3(0,0,0), glm::vec3(0,1,0)); */
 
-    glm::mat4 model = glm::mat4(1.0f);
+    /* glm::mat4 model = glm::mat4(1.0f); */
 
 
-    Camera camera(width, height, glm::vec3(1,1,1));
+    /* Camera camera(width, height, glm::vec3(1,1,1)); */
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -219,12 +227,12 @@ int main()
         GLuint projectionID = glGetUniformLocation(shaderProgram.ID, "projection");
 
 
-        camera.Inputs(window, scale);
+        /* camera.Inputs(window, scale); */
 
-        glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]);
+        /* glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]); */
         /* glUniformMatrix4fv(viewID, 1, GL_FALSE, &view[0][0]); */
         /* glUniformMatrix4fv(projectionID, 1, GL_FALSE, &projection[0][0]); */
-        camera.Matrix(45.5f, 0.1f, 100.0f, shaderProgram, "PV");
+        /* camera.Matrix(45.5f, 0.1f, 100.0f, shaderProgram, "PV"); */
 
 		// Handles camera inputs
         float scale = 0.5f;
@@ -239,9 +247,9 @@ int main()
 		VAO1.Bind();
 		// Draw primitives, number of indices, datatype of indices, index of indices
 		/* glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0); */
-		glDrawArrays(GL_PATCHES, 0, 4*4*numberOfPatches); //maybe wrong
+		glDrawArrays(GL_PATCHES, 0, 4); //maybe wrong
 
-        /* glPolygonMode(GL_FRONT, GL_FILL); */
+        glPolygonMode(GL_FRONT, GL_FILL);
         /* glPolygonMode(GL_BACK, GL_FILL); */
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
