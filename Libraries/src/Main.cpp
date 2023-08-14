@@ -81,12 +81,20 @@ void GenVertices(unsigned numberOfPatches)
 
 }*/
 
+/* GLfloat vertices[] = */
+/* { */
+/* 	-0.5f, -0.5f , 0.0f, 0.0f, 0.0f, // Lower left corner */
+/* 	 0.5f, -0.5f , 0.0f, 1.0f, 0.0f, // Lower right corner */
+/* 	 0.5f,  0.5f , 0.0f, 1.0f, 1.0f, // Upper right */
+/* 	-0.5f,  0.5f , 0.0f, 0.0f, 1.0f  // Upper left */
+/* }; */
+
 GLfloat vertices[] =
 {
-	-0.5f, -0.5f , 0.0f, 0.0f, 0.0f, // Lower left corner
-	 0.5f, -0.5f , 0.0f, 1.0f, 0.0f, // Lower right corner
-	 0.5f,  0.5f , 0.0f, 1.0f, 1.0f, // Upper right
-	-0.5f,  0.5f , 0.0f, 0.0f, 1.0f  // Upper left
+	-0.5f, 0.0f , -0.5f, 0.0f, 0.0f, // Lower left corner
+	 0.5f, 0.0f , -0.5f, 1.0f, 0.0f, // Lower right corner
+	 0.5f, 0.0f ,  0.5f, 1.0f, 1.0f, // Upper right
+	-0.5f, 0.0f ,  0.5f, 0.0f, 1.0f  // Upper left
 };
 
 int main()

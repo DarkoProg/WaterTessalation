@@ -16,7 +16,8 @@ void main()
 {
     /* float heightColor = 125;//(Height + 16) / 32.0f; */
 	/* FragColor = vec4(heightColor, heightColor, heightColor, 1.0f); */ 
-    float h = (Height + 16)/64.0f;
+    float h = (Height)*50.0f;
+    /* float h = (Height)/32; */
 	FragColor = vec4(h, h, h, 1.0);
     /* FragColor = vec4(Texture_FS_in, 0.02f, 1.0f); */
     //FragColor = texture(gSampler, Texture_CS_in);

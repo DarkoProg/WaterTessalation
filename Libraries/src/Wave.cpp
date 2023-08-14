@@ -28,7 +28,7 @@ void Wave::test(int (*waveTexture))
                 // !!!!!!!!!!!! rename colorValue, colorValue is gona be used for rgb values later !!!!!!!!!!!!!!!!
                 glm::vec3 dir = Wave::CalculateCircularDirection(glm::vec3 (x, y, 0), glm::vec3 (0, 0, 0));
 
-                float amplitude = 10;
+                float amplitude = 5;
                 float wavePointValue = SelectWaves(x, y, t, 1, 5, amplitude, 1, glm::vec3(-0.5f, -0.5f, 0)); 
 
                 float colorValue = MapToGrayscale(amplitude, wavePointValue); 
