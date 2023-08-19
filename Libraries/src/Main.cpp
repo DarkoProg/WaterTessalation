@@ -27,7 +27,7 @@
  
 const unsigned int width = 1920;
 const unsigned int height = 1080;
-
+GLFWwindow* window; 
 
 /* GLfloat vertices[] = */
 /* { */
@@ -45,35 +45,23 @@ GLfloat vertices[] =
 	-0.5f, 0.0f ,  0.5f, 0.0f, 1.0f  // Upper left
 };
 
-GLFWwindow* window; 
-
 GLFWwindow* GLInit()
 {
 	// Initialize GLFW
 	glfwInit();
 
-	// Tell GLFW what version of OpenGL we are using 
-	// In this case we are using OpenGL 3.3
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	// Tell GLFW we are using the CORE profile
-	// So that means we only have the modern functions
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Create a GLFWwindow object of 800 by 800 pixels, naming it "YoutubeOpenGL"
 	GLFWwindow* windowi = glfwCreateWindow(800, 800, "Diplomska", NULL, NULL);
-	// Error check if the window fails to create
 	if (windowi == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 	}
-	// Introduce the window into the current context
 	glfwMakeContextCurrent(windowi);
-	//Load GLAD so it configures OpenGL
 	gladLoadGL();
-	// Specify the viewport of OpenGL in the Window
-	// In this case the viewport goes from x = 0, y = 0, to x = 800, y = 800
 	glViewport(0, 0, 800, 800);
 
     GLint MaxPatchVertices = 0;
@@ -84,19 +72,6 @@ GLFWwindow* GLInit()
     return windowi;
 }
 
-unsigned int TextureInit()
-{
-	unsigned int texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	// set the texture wrapping/filtering options (on the currently bound texture object)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    return texture;
-}
 
 void TextureSetup(int widthImg, int heightImg, Shader& shaderProgram)
 {
@@ -105,7 +80,6 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgram)
     wave.test(*data);
     if (*data)
     {
-        /* std::cout << "zakaj"; */
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthImg, heightImg, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
@@ -157,7 +131,7 @@ int main()
         camera.Matrix(45.5f, 0.1f, 100.0f, shaderProgram, "PV");
 		camera.Inputs(window, scale);
 
-        //just wirefram testing
+        //just wireframe testing
         /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
 		VAO1.Bind();
 		glDrawArrays(GL_PATCHES, 0, 4); //maybe wrong
