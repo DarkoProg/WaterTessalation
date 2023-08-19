@@ -93,7 +93,7 @@ void main()
     /* vec4 p3 = gl_in[3].gl_Position; */
 
     /* gl_Position = p0 * (1-u) * (1-v) + p1 * u * (1-v) + p2 * u * v + p3 * (1-u) * v; */
-    /* p = p0 * (1-u) * (1-v) + p1 * u * (1-v) + p2 * u * v + p3 * (1-u) * v; */
+    /* /1* p = p0 * (1-u) * (1-v) + p1 * u * (1-v) + p2 * u * v + p3 * (1-u) * v; *1/ */
     /* gl_Position = PV * p; */
 
 
