@@ -26,7 +26,7 @@
 #include "../include/Wave.h"
  
 const unsigned int width = 1920;
-const unsigned int height = 10800;
+const unsigned int height = 1080;
 GLFWwindow* window; 
 
 /* GLfloat vertices[] = */
