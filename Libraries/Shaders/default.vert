@@ -12,7 +12,7 @@ layout (location = 1) in vec2 Texture_VS_in;
 //out vec2 texCord;
 
 //out vec4 Position_CS_in;
-//out vec3 Position_CS_in; use when you include tessalation shaders
+/* out vec3 Position_CS_in; use when you include tessalation shaders */
 out vec2 Texture_CS_in;
 
 // Inputs the matrices needed for 3D viewing with perspective
@@ -27,6 +27,7 @@ void main()
 	//Position_CS_in = vec4(Position_VS_in.x, Position_VS_in.y, Position_VS_in.z, 1.0); 
     //Position_CS_in = vec4(Position_VS_in, 1.0); //might change with PMV
     gl_Position = vec4(Position_VS_in, 1.0f);
+    /* Position_CS_in = Position_VS_in; */
     Texture_CS_in = Texture_VS_in;
     /* gl_Position = vec4(Position_VS_in, 1.0f); */
 	// Assigns the colors from the Vertex Data to "color"

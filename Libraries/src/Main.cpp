@@ -32,8 +32,10 @@
 /* #define STB_IMAGE_IMPLEMENTATION */
 /* #include "Libraries/include/stb/stb_image.h" */
 
-const unsigned int width = 800;
-const unsigned int height = 800;
+/* const unsigned int width = 800; */
+/* const unsigned int height = 800; */
+const unsigned int width = 1920;
+const unsigned int height = 1080;
 
 /*
 std::vector<float> vertices;
@@ -212,12 +214,6 @@ int main()
     Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
 
-    /* glm::mat4 projection = glm::perspectiveFov(glm::radians(45.5f), (float)width, (float) height, 0.1f, 100.0f); */
-
-    /* glm::mat4 view = glm::lookAt(glm::vec3(1,1,1), glm::vec3(0,0,0), glm::vec3(0,1,0)); */
-
-    /* glm::mat4 model = glm::mat4(1.0f); */
-
 
     /* Camera camera(width, height, glm::vec3(1,1,1)); */
 	// Main while loop
@@ -229,24 +225,14 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 		// Tell OpenGL which Shader Program we want to use
 		// Bind the VAO so OpenGL knows to use it
-        
-        /* GLuint modelID = glGetUniformLocation(shaderProgram.ID, "M"); */
-        /* GLuint viewID = glGetUniformLocation(shaderProgram.ID, "view"); */
-        /* GLuint projectionID = glGetUniformLocation(shaderProgram.ID, "projection"); */
-
-
         camera.Inputs(window, scale);
 
-        /* glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]); */
-        /* glUniformMatrix4fv(viewID, 1, GL_FALSE, &view[0][0]); */
-        /* glUniformMatrix4fv(projectionID, 1, GL_FALSE, &projection[0][0]); */
         camera.Matrix(45.5f, 0.1f, 100.0f, shaderProgram, "PV");
 
 		// Handles camera inputs
         float scale = 0.5f;
 		camera.Inputs(window, scale);
 		// Updates and exports the camera matrix to the Vertex Shader
-		/* camera.Matrix(0.0f, 0.0f, 100.0f, shaderProgram, "camMatrix"); */
 
         //just wirefram testing
         /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
@@ -257,8 +243,6 @@ int main()
 		/* glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0); */
 		glDrawArrays(GL_PATCHES, 0, 4); //maybe wrong
 
-        /* glPolygonMode(GL_FRONT, GL_FILL); */
-        /* glPolygonMode(GL_BACK, GL_FILL); */
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
