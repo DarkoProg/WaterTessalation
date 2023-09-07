@@ -37,16 +37,67 @@ GLFWwindow* window;
 /* 	-0.5f,  0.5f , 0.0f, 0.0f, 1.0f  // Upper left */
 /* }; */
 
-GLfloat vertices[] =
+/* GLfloat vertices[] = */
+/* { */
+/* 	-10.0f, 0.0f , -10.0f, 0.0f, 0.0f, // Lower left corner */
+/* 	 10.0f, 0.0f , -10.0f, 1.0f, 0.0f, // Lower right corner */
+/* 	 10.0f, 0.0f ,  10.0f, 1.0f, 1.0f, // Upper right */
+/* 	-10.0f, 0.0f ,  10.0f, 0.0f, 1.0f  // Upper left */
+/* }; */
+
+/* GLfloat vertices[] = */
+/* { */
+/* 	-0.5f, 0.0f , -0.5f, 0.0f, 0.0f, // Lower left corner */
+/* 	 0.5f, 0.0f , -0.5f, 1.0f, 0.0f, // Lower right corner */
+/* 	 0.5f, 0.0f ,  0.5f, 1.0f, 1.0f, // Upper right */
+/* 	-0.5f, 0.0f ,  0.5f, 0.0f, 1.0f  // Upper left */
+/* }; */
+
+std::vector<GLfloat> vertices;
+
+void MakePatches(int patchNum)
 {
-	-0.5f, 0.0f , -0.5f, 0.0f, 0.0f, // Lower left corner
-	 0.5f, 0.0f , -0.5f, 1.0f, 0.0f, // Lower right corner
-	 0.5f, 0.0f ,  0.5f, 1.0f, 1.0f, // Upper right
-	-0.5f, 0.0f ,  0.5f, 0.0f, 1.0f  // Upper left
-};
+   for(int i = 0; i < patchNum; i++)
+   {
+        for(int j = 0; j < patchNum; j++)
+        {
+
+            //x
+            //y
+            //z
+            //u
+            //v
+
+            vertices.push_back(1.0f * j - 0.5f);
+            vertices.push_back(0.0f);
+            vertices.push_back(1.0f * i - 0.5f);
+            vertices.push_back(j / (float) patchNum);
+            vertices.push_back(i / (float) patchNum);
+
+            vertices.push_back(1.0f * j + 0.5f);
+            vertices.push_back(0.0f);
+            vertices.push_back(1.0f * i - 0.5f);
+            vertices.push_back(j + 1 / (float) patchNum);
+            vertices.push_back(i / (float) patchNum);
+
+            vertices.push_back(1.0f * j + 0.5f);
+            vertices.push_back(0.0f);
+            vertices.push_back(1.0f * i + 0.5f);
+            vertices.push_back(j + 1 / (float) patchNum);
+            vertices.push_back(i + 1 / (float) patchNum);
+
+            vertices.push_back(1.0f * j - 0.5f);
+            vertices.push_back(0.0f);
+            vertices.push_back(1.0f * i + 0.5f);
+            vertices.push_back(j / (float) patchNum);
+            vertices.push_back(i + 1 / (float) patchNum);
+        }
+   }
+}
 
 GLFWwindow* GLInit()
 {
+
 	// Initialize GLFW
 	glfwInit();
 
@@ -91,9 +142,23 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgram)
     glUniform1i(textureToUni, 0);
 }
 
+/* void printVert() */
+/* { */
+/*     for(int i = 0; i < vertices.size()/5; i++) */
+/*     { */
+/*         for( int z = 0; z < 5; z++) */
+/*         { */
+/*             std::cout << vertices[i*5+z] << ", "; */
+/*         } */
+/*         std::cout << "\n"; */
+/*     } */
+/* } */
+
 int main()
 {
-    unsigned numberOfPatches = 1;
+    unsigned patchNum = 1;
+    MakePatches(patchNum);
+    /* printVert(); */
 
     Wave wave;
 
@@ -104,6 +169,8 @@ int main()
 	VAO1.Bind();
 
 	VBO VBO1(vertices, sizeof(vertices));
+    /* VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 5*sizeof(float), (void*)0); */
+    /* VAO1.LinkAttribute(VBO1, 1, 2, GL_FLOAT, 5*sizeof(float), (void*)(3*sizeof(float))); */
     VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 5*sizeof(float), (void*)0);
     VAO1.LinkAttribute(VBO1, 1, 2, GL_FLOAT, 5*sizeof(float), (void*)(3*sizeof(float)));
 
