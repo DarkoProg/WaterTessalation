@@ -156,7 +156,7 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgram)
 
 int main()
 {
-    unsigned patchNum = 1;
+    unsigned patchNum = 5;
     MakePatches(patchNum);
     /* printVert(); */
 
@@ -168,7 +168,7 @@ int main()
 	VAO VAO1;
 	VAO1.Bind();
 
-	VBO VBO1(vertices, sizeof(vertices));
+	VBO VBO1(vertices, vertices.size()*sizeof(GLfloat));
     /* VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 5*sizeof(float), (void*)0); */
     /* VAO1.LinkAttribute(VBO1, 1, 2, GL_FLOAT, 5*sizeof(float), (void*)(3*sizeof(float))); */
     VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 5*sizeof(float), (void*)0);
@@ -201,7 +201,7 @@ int main()
         //just wireframe testing
         /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
 		VAO1.Bind();
-		glDrawArrays(GL_PATCHES, 0, 4); //maybe wrong
+		glDrawArrays(GL_PATCHES, 0, 4*patchNum); //maybe wrong
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
