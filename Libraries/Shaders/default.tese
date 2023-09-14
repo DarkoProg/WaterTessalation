@@ -1,6 +1,6 @@
 #version 400 core
 
-layout(quads, equal_spacing, ccw) in; //maybe quads
+layout(quads, fractional_odd_spacing, ccw) in; //maybe quads
 
 uniform sampler2D heightMap;
 uniform mat4 M;
@@ -14,10 +14,14 @@ float BilinearInterpolation(float u, float v)
 {
     vec2 t00 = Texture_ES_in[0];
     vec2 t01 = Texture_ES_in[1];
-    vec2 t11 = Texture_ES_in[3];
-    vec2 t10 = Texture_ES_in[2];
+    vec2 t11 = Texture_ES_in[2];
+    vec2 t10 = Texture_ES_in[3];
 
-    vec2 textureCordinate = v * ((1-u) * t00 + u * t01) - (1-v) * ((1-u) * t10 + u * t11);
+    vec2 t0 = (t01 - t00) * u + t00;
+    vec2 t1 = (t11 - t10) * u + t10;
+    vec2 textureCordinate = (t1 - t0) * v + t0;
+    /* vec2 textureCordinate = v * ((1-u) * t00 + u * t01) - (1-v) * ((1-u) * t10 + u * t11); */
+    /* vec2 textureCordinate = u * ((1-v) * t00 + v * t01) - (1-u) * ((1-v) * t10 + v * t11); */
     return texture(heightMap, textureCordinate).z;
 }
 
@@ -26,7 +30,7 @@ void main()
     float u = gl_TessCoord.x;
     float v = gl_TessCoord.y;
 
-    Height = BilinearInterpolation(u,v) * 0.05f;
+    Height = BilinearInterpolation(u,v);
 
     vec4 p00 = gl_in[0].gl_Position;
     vec4 p01 = gl_in[1].gl_Position;

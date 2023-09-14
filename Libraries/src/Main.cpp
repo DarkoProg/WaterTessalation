@@ -55,7 +55,7 @@ GLFWwindow* window;
 
 std::vector<GLfloat> vertices;
 
-void MakePatches(int patchNum)
+void MakePatches(int patchNum, int imgHeight, int imgWidth)
 {
    for(int i = 0; i < patchNum; i++)
    {
@@ -68,38 +68,63 @@ void MakePatches(int patchNum)
             //u
             //v
 
-            vertices.push_back(1.0f * j - 0.5f);
-            vertices.push_back(0.0f);
-            vertices.push_back(1.0f * i - 0.5f);
-            vertices.push_back(j / (float) patchNum);
-            vertices.push_back(i / (float) patchNum);
+            /* vertices.push_back(1.0f * j - 0.5f); */
+            /* vertices.push_back(0.0f); */
+            /* vertices.push_back(1.0f * i - 0.5f); */
+            /* vertices.push_back(j / (float) patchNum); */
+            /* vertices.push_back(i / (float) patchNum); */
 
-            vertices.push_back(1.0f * j + 0.5f);
-            vertices.push_back(0.0f);
-            vertices.push_back(1.0f * i - 0.5f);
-            vertices.push_back(j + 1 / (float) patchNum);
-            vertices.push_back(i / (float) patchNum);
+            /* vertices.push_back(1.0f * j + 0.5f); */
+            /* vertices.push_back(0.0f); */
+            /* vertices.push_back(1.0f * i - 0.5f); */
+            /* vertices.push_back(j + 1 / (float) patchNum); */
+            /* vertices.push_back(i / (float) patchNum); */
 
-            vertices.push_back(1.0f * j + 0.5f);
-            vertices.push_back(0.0f);
-            vertices.push_back(1.0f * i + 0.5f);
-            vertices.push_back(j + 1 / (float) patchNum);
-            vertices.push_back(i + 1 / (float) patchNum);
+            /* vertices.push_back(1.0f * j + 0.5f); */
+            /* vertices.push_back(0.0f); */
+            /* vertices.push_back(1.0f * i + 0.5f); */
+            /* vertices.push_back(j + 1 / (float) patchNum); */
+            /* vertices.push_back(i + 1 / (float) patchNum); */
 
-            vertices.push_back(1.0f * j - 0.5f);
-            vertices.push_back(0.0f);
-            vertices.push_back(1.0f * i + 0.5f);
-            vertices.push_back(j / (float) patchNum);
-            vertices.push_back(i + 1 / (float) patchNum);
-        }
-   }
-}
+            /* vertices.push_back(1.0f * j - 0.5f); */
+            /* vertices.push_back(0.0f); */
+            /* vertices.push_back(1.0f * i + 0.5f); */
+            /* vertices.push_back(j / (float) patchNum); */
+            /* vertices.push_back(i + 1 / (float) patchNum); */
 
-GLFWwindow* GLInit()
-{
 
-	// Initialize GLFW
-	glfwInit();
+            vertices.push_back(-imgWidth/2.0f + imgWidth*j/(float)patchNum); // v.x
+            vertices.push_back(0.0f); // v.y
+            vertices.push_back(-imgHeight/2.0f + imgHeight*i/(float)patchNum); // v.z
+            vertices.push_back(j / (float)patchNum); // v
+            vertices.push_back(i / (float)patchNum); // u
+
+            vertices.push_back(-imgWidth/2.0f + imgWidth*(j+1)/(float)patchNum); // v.x
+            vertices.push_back(0.0f); // v.y
+            vertices.push_back(-imgHeight/2.0f + imgHeight*i/(float)patchNum); // v.z
+            vertices.push_back((j+1) / (float)patchNum); // v
+            vertices.push_back(i / (float)patchNum); // u
+
+            vertices.push_back(-imgWidth/2.0f + imgWidth*(j+1)/(float)patchNum); // v.x
+            vertices.push_back(0.0f); // v.y
+            vertices.push_back(-imgHeight/2.0f + imgHeight*(i+1)/(float)patchNum); // v.z
+            vertices.push_back((j+1) / (float)patchNum); // v
+            vertices.push_back((i+1) / (float)patchNum); // u
+                                                         //
+            vertices.push_back(-imgWidth/2.0f + imgWidth*j/(float)patchNum); // v.x
+            vertices.push_back(0.0f); // v.y
+            vertices.push_back(-imgHeight/2.0f + imgHeight*(i+1)/(float)patchNum); // v.z
+            vertices.push_back(j / (float)patchNum); // v
+            vertices.push_back((i+1) / (float)patchNum); // u
+            }
+       }
+    }
+
+    GLFWwindow* GLInit()
+    {
+
+        // Initialize GLFW
+        glfwInit();
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -126,12 +151,25 @@ GLFWwindow* GLInit()
 
 void TextureSetup(int widthImg, int heightImg, Shader& shaderProgram)
 {
+    unsigned int texture;
+    glGenTextures(1, &texture); 
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
     Wave wave;
     int data[widthImg] [heightImg];
     wave.test(*data);
     if (*data)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthImg, heightImg, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    /* glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE ); */
+    /* glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST ); */
+    /* glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR ); */
+    /* glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR ); */
+    /* glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR ); */
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else
@@ -156,8 +194,8 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgram)
 
 int main()
 {
-    unsigned patchNum = 5;
-    MakePatches(patchNum);
+    unsigned patchNum = 20;
+    MakePatches(patchNum, 1000, 1000);
     /* printVert(); */
 
     Wave wave;
@@ -195,13 +233,13 @@ int main()
 
         camera.Inputs(window, scale);
 
-        camera.Matrix(45.5f, 0.1f, 100.0f, shaderProgram, "PV");
+        camera.Matrix(45.5f, 0.1f, 10000.0f, shaderProgram, "PV");
 		camera.Inputs(window, scale);
 
         //just wireframe testing
         /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
 		VAO1.Bind();
-		glDrawArrays(GL_PATCHES, 0, 4*patchNum); //maybe wrong
+		glDrawArrays(GL_PATCHES, 0, 4*patchNum*patchNum); //maybe wrong
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
