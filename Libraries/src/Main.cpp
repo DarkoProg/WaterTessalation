@@ -67,55 +67,29 @@ void MakePatches(int patchNum, int imgHeight, int imgWidth)
             //z
             //u
             //v
+            vertices.push_back(-imgWidth/2.0f + imgWidth*j/(float)patchNum);
+            vertices.push_back(0.0f);
+            vertices.push_back(-imgHeight/2.0f + imgHeight*i/(float)patchNum);
+            vertices.push_back(j / (float)patchNum);
+            vertices.push_back(i / (float)patchNum);
 
-            /* vertices.push_back(1.0f * j - 0.5f); */
-            /* vertices.push_back(0.0f); */
-            /* vertices.push_back(1.0f * i - 0.5f); */
-            /* vertices.push_back(j / (float) patchNum); */
-            /* vertices.push_back(i / (float) patchNum); */
+            vertices.push_back(-imgWidth/2.0f + imgWidth*(j+1)/(float)patchNum);
+            vertices.push_back(0.0f);
+            vertices.push_back(-imgHeight/2.0f + imgHeight*i/(float)patchNum);
+            vertices.push_back((j+1) / (float)patchNum);
+            vertices.push_back(i / (float)patchNum);
 
-            /* vertices.push_back(1.0f * j + 0.5f); */
-            /* vertices.push_back(0.0f); */
-            /* vertices.push_back(1.0f * i - 0.5f); */
-            /* vertices.push_back(j + 1 / (float) patchNum); */
-            /* vertices.push_back(i / (float) patchNum); */
-
-            /* vertices.push_back(1.0f * j + 0.5f); */
-            /* vertices.push_back(0.0f); */
-            /* vertices.push_back(1.0f * i + 0.5f); */
-            /* vertices.push_back(j + 1 / (float) patchNum); */
-            /* vertices.push_back(i + 1 / (float) patchNum); */
-
-            /* vertices.push_back(1.0f * j - 0.5f); */
-            /* vertices.push_back(0.0f); */
-            /* vertices.push_back(1.0f * i + 0.5f); */
-            /* vertices.push_back(j / (float) patchNum); */
-            /* vertices.push_back(i + 1 / (float) patchNum); */
-
-
-            vertices.push_back(-imgWidth/2.0f + imgWidth*j/(float)patchNum); // v.x
-            vertices.push_back(0.0f); // v.y
-            vertices.push_back(-imgHeight/2.0f + imgHeight*i/(float)patchNum); // v.z
-            vertices.push_back(j / (float)patchNum); // v
-            vertices.push_back(i / (float)patchNum); // u
-
-            vertices.push_back(-imgWidth/2.0f + imgWidth*(j+1)/(float)patchNum); // v.x
-            vertices.push_back(0.0f); // v.y
-            vertices.push_back(-imgHeight/2.0f + imgHeight*i/(float)patchNum); // v.z
-            vertices.push_back((j+1) / (float)patchNum); // v
-            vertices.push_back(i / (float)patchNum); // u
-
-            vertices.push_back(-imgWidth/2.0f + imgWidth*(j+1)/(float)patchNum); // v.x
-            vertices.push_back(0.0f); // v.y
-            vertices.push_back(-imgHeight/2.0f + imgHeight*(i+1)/(float)patchNum); // v.z
-            vertices.push_back((j+1) / (float)patchNum); // v
-            vertices.push_back((i+1) / (float)patchNum); // u
-                                                         //
-            vertices.push_back(-imgWidth/2.0f + imgWidth*j/(float)patchNum); // v.x
-            vertices.push_back(0.0f); // v.y
-            vertices.push_back(-imgHeight/2.0f + imgHeight*(i+1)/(float)patchNum); // v.z
-            vertices.push_back(j / (float)patchNum); // v
-            vertices.push_back((i+1) / (float)patchNum); // u
+            vertices.push_back(-imgWidth/2.0f + imgWidth*(j+1)/(float)patchNum);
+            vertices.push_back(0.0f);
+            vertices.push_back(-imgHeight/2.0f + imgHeight*(i+1)/(float)patchNum);
+            vertices.push_back((j+1) / (float)patchNum);
+            vertices.push_back((i+1) / (float)patchNum);
+                                                         
+            vertices.push_back(-imgWidth/2.0f + imgWidth*j/(float)patchNum);
+            vertices.push_back(0.0f);
+            vertices.push_back(-imgHeight/2.0f + imgHeight*(i+1)/(float)patchNum);
+            vertices.push_back(j / (float)patchNum);
+            vertices.push_back((i+1) / (float)patchNum);
             }
        }
     }
