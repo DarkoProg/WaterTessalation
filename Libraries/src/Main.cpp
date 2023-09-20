@@ -54,6 +54,7 @@ GLFWwindow* window;
 /* }; */
 
 std::vector<GLfloat> vertices;
+std::vector<unsigned int> indices;
 
 void MakePatches(int patchNum, int imgHeight, int imgWidth)
 {
@@ -90,15 +91,36 @@ void MakePatches(int patchNum, int imgHeight, int imgWidth)
             vertices.push_back(-imgHeight/2.0f + imgHeight*(i+1)/(float)patchNum);
             vertices.push_back(j / (float)patchNum);
             vertices.push_back((i+1) / (float)patchNum);
-            }
-       }
+        }
     }
+}
 
-    GLFWwindow* GLInit()
+void GenCPUdata(int imgHeight, int imgWidth, unsigned char* data, int nChannels)
+{
+    float yScale = 64.0f / 256.0f, yShift = 16.0f;  // apply a scale+shift to the height data
+    for(unsigned int i = 0; i < imgHeight; i++)
     {
+        for(unsigned int j = 0; j < imgWidth; j++)
+        {
+            // retrieve texel for (i,j) tex coord
+            unsigned char* texel = data + (j + width * i) * nChannels;
+            // raw height at coordinate
+            unsigned char y = texel[0];
 
-        // Initialize GLFW
-        glfwInit();
+            // vertex
+            vertices.push_back( -imgHeight/2.0f + i);        // v.x
+            vertices.push_back( (int)y * yScale - yShift); // v.y
+            vertices.push_back( -imgWidth/2.0f + j);        // v.z
+        }
+    }
+}
+
+
+GLFWwindow* GLInit()
+{
+
+    // Initialize GLFW
+    glfwInit();
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -119,11 +141,12 @@ void MakePatches(int patchNum, int imgHeight, int imgWidth)
     printf("Max supported patch vertices %d\n", MaxPatchVertices);
 
     glPatchParameteri(GL_PATCH_VERTICES, 4);
+    glEnable(GL_DEPTH_TEST);
     return windowi;
 }
 
 
-void TextureSetup(int widthImg, int heightImg, Shader& shaderProgram)
+void TextureSetup(int widthImg, int heightImg, Shader& shaderProgram, int* data)
 {
     unsigned int texture;
     glGenTextures(1, &texture); 
@@ -133,9 +156,6 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgram)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    Wave wave;
-    int data[widthImg] [heightImg];
-    wave.test(*data);
     if (*data)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthImg, heightImg, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -172,7 +192,11 @@ int main()
     MakePatches(patchNum, 1000, 1000);
     /* printVert(); */
 
+    int widthImg = 1000;
+    int heightImg= 1000;
     Wave wave;
+    int data[widthImg] [heightImg];
+    wave.test(*data);
 
     window = GLInit();
 	Shader shaderProgram("Libraries/Shaders/default.vert", "Libraries/Shaders/default.frag", "Libraries/Shaders/default.tesc", "Libraries/Shaders/default.tese");
@@ -189,9 +213,7 @@ int main()
 	VAO1.Unbind();
 	VBO1.Unbind();
 
-    int widthImg = 1000;
-    int heightImg= 1000;
-    TextureSetup(widthImg, heightImg, shaderProgram);
+    TextureSetup(widthImg, heightImg, shaderProgram, *data);
     shaderProgram.Activate();
 
     float scale = 0.5f;
@@ -203,7 +225,7 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         camera.Inputs(window, scale);
 
