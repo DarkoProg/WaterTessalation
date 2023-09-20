@@ -58,6 +58,7 @@ std::vector<unsigned int> indices;
 
 void MakePatches(int patchNum, int imgHeight, int imgWidth)
 {
+   vertices.clear();
    for(int i = 0; i < patchNum; i++)
    {
         for(int j = 0; j < patchNum; j++)
@@ -97,6 +98,7 @@ void MakePatches(int patchNum, int imgHeight, int imgWidth)
 
 void GenCPUdata(int imgHeight, int imgWidth, unsigned char* data, int nChannels)
 {
+    vertices.clear();
     float yScale = 64.0f / 256.0f, yShift = 16.0f;  // apply a scale+shift to the height data
     for(unsigned int i = 0; i < imgHeight; i++)
     {
@@ -113,6 +115,19 @@ void GenCPUdata(int imgHeight, int imgWidth, unsigned char* data, int nChannels)
             vertices.push_back( -imgWidth/2.0f + j);        // v.z
         }
     }
+
+    for(unsigned int i = 0; i < imgHeight-1; i++)       // for each row a.k.a. each strip
+    {
+        for(unsigned int j = 0; j < imgWidth; j++)      // for each column
+        {
+            for(unsigned int k = 0; k < 2; k++)      // for each side of the strip
+            {
+                indices.push_back(j + imgWidth * (i + k));
+            }
+        }
+    }
+
+
 }
 
 
@@ -188,6 +203,9 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgram, int* data)
 
 int main()
 {
+    const unsigned int NUM_STRIPS = height-1;
+    const unsigned int NUM_VERTS_PER_STRIP = width*2;
+    bool gpu = true;
     unsigned patchNum = 20;
     MakePatches(patchNum, 1000, 1000);
     /* printVert(); */
@@ -199,21 +217,38 @@ int main()
     wave.test(*data);
 
     window = GLInit();
-	Shader shaderProgram("Libraries/Shaders/default.vert", "Libraries/Shaders/default.frag", "Libraries/Shaders/default.tesc", "Libraries/Shaders/default.tese");
 
-	VAO VAO1;
-	VAO1.Bind();
 
-	VBO VBO1(vertices, vertices.size()*sizeof(GLfloat));
-    /* VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 5*sizeof(float), (void*)0); */
-    /* VAO1.LinkAttribute(VBO1, 1, 2, GL_FLOAT, 5*sizeof(float), (void*)(3*sizeof(float))); */
-    VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 5*sizeof(float), (void*)0);
-    VAO1.LinkAttribute(VBO1, 1, 2, GL_FLOAT, 5*sizeof(float), (void*)(3*sizeof(float)));
+    Shader shaderProgram;
+    VAO VAO1;
+    VAO1.Bind();
+    VBO VBO1(vertices, vertices.size()*sizeof(GLfloat));
+    EBO EBO1;
+    if(gpu)
+    {
+        Shader tempShaderProgram("Libraries/Shaders/default.vert", "Libraries/Shaders/default.frag", "Libraries/Shaders/default.tesc", "Libraries/Shaders/default.tese");
+        shaderProgram = tempShaderProgram;
 
-	VAO1.Unbind();
-	VBO1.Unbind();
+        /* VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 5*sizeof(float), (void*)0); */
+        /* VAO1.LinkAttribute(VBO1, 1, 2, GL_FLOAT, 5*sizeof(float), (void*)(3*sizeof(float))); */
+        VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 5*sizeof(float), (void*)0);
+        VAO1.LinkAttribute(VBO1, 1, 2, GL_FLOAT, 5*sizeof(float), (void*)(3*sizeof(float)));
 
-    TextureSetup(widthImg, heightImg, shaderProgram, *data);
+        VAO1.Unbind();
+        VBO1.Unbind();
+        TextureSetup(widthImg, heightImg, shaderProgram, *data);
+    }
+    else
+    {
+        EBO cpuEBO(&indices, sizeof(indices));
+        EBO1 = cpuEBO;
+
+        VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 0, (void*)0);
+        VAO1.Unbind();
+        VBO1.Unbind();
+        EBO1.Unbind();
+    
+    }
     shaderProgram.Activate();
 
     float scale = 0.5f;

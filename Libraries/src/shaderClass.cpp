@@ -20,6 +20,10 @@ std::string get_file_contents(const char* filename)
 }
 
 // Constructor that build the Shader Program from 2 different shaders
+Shader::Shader()
+{
+}
+
 Shader::Shader(const char* vertexFile, const char* fragmentFile, const char* tessalationControlFile, const char* tessalationEvaluationFile)
 /* Shader::Shader(const char* vertexFile, const char* fragmentFile) */
 {

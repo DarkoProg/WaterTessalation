@@ -16,6 +16,7 @@ public:
 	// Reference ID of the Shader Program
 	GLuint ID;
 	// Constructor that build the Shader Program from 2 different shaders
+    Shader();
 	Shader(const char* vertexFile, const char* fragmentFile, const char* tessalationControlFile, const char* tessalationEvaluationFile);
 
 	// Activates the Shader Program
