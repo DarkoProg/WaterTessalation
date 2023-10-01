@@ -1,6 +1,7 @@
 #include "../include/glad.h"
 #include "glm/gtx/string_cast.hpp"
 #include <GLFW/glfw3.h>
+#include <cstddef>
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
@@ -25,8 +26,8 @@
 #include "../include/shaderClass.h"
 #include "../include/Wave.h"
  
-const unsigned int width = 1920;
-const unsigned int height = 1080;
+const unsigned int width = 1000;
+const unsigned int height = 1000;
 GLFWwindow* window; 
 
 /* GLfloat vertices[] = */
@@ -97,18 +98,21 @@ void MakePatches(int patchNum, int imgHeight, int imgWidth)
     }
 }
 
-void GenCPUdata(int imgHeight, int imgWidth, int* data, int nChannels)
+template <size_t imgWidth, size_t imgHeight>
+void GenCPUdata( int (&data)[imgWidth][imgHeight])
+/* void GenCPUdata(int imgHeight, int imgWidth, int (&data)[rows][cols], int nChannels) */
 {
     verticesCPU.clear();
     float yScale = 64.0f / 256.0f, yShift = 16.0f;  // apply a scale+shift to the height data
-    for(unsigned int i = 0; i < imgHeight; i++)
+    for(size_t i = 0; i < imgHeight; i++)
     {
-        for(unsigned int j = 0; j < imgWidth; j++)
+        for(size_t j = 0; j < imgWidth; j++)
         {
             // retrieve texel for (i,j) tex coord
-            int* texel = data + (j + width * i) * nChannels;
+            /* int texel = (data + (j + width * i) * nChannels); */
+            int y = data[i][j];
             // raw height at coordinate
-            int y = texel[0];
+            /* int y = texel; */
 
             // vertex
             verticesCPU.push_back( -imgHeight/2.0f + i);        // v.x
@@ -207,15 +211,18 @@ int main()
     int widthImg = 1000;
     int heightImg= 1000;
     Wave wave;
-    int data[widthImg] [heightImg];
+    /* int data[widthImg] [heightImg]; */
+    int data[1000] [1000];
     wave.test(*data);
     const unsigned int NUM_STRIPS = height-1;
     const unsigned int NUM_VERTS_PER_STRIP = width*2;
     bool gpu = false;
     unsigned patchNum = 20;
     MakePatches(patchNum, widthImg, heightImg);
-    GenCPUdata(widthImg, heightImg, *data, 1);
-    /* printVert(); */
+
+    std::cout << "weee goood";
+    GenCPUdata(data);
+    std::cout << "aaaaaaaaaaaaaaaaaaaaaaaaaa";
 
 
     window = GLInit();
