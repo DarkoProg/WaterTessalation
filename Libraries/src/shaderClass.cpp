@@ -39,9 +39,6 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile, const char* tes
     const char* tessalationControlSource = tessalationControlCode.c_str();
     const char* tessalationEvaluationSource = tessalationEvaluationCode.c_str();
 
-
-    std::cout << "vert";
-
 	// Create Vertex Shader Object and get its reference
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	// Attach Vertex Shader source to the Vertex Shader Object
@@ -51,7 +48,6 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile, const char* tes
 	// Checks if Shader compiled succesfully
 	compileErrors(vertexShader, "VERTEX");
 
-    std::cout << "frag";
 	// Create Fragment Shader Object and get its reference
 	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	// Attach Fragment Shader source to the Fragment Shader Object
@@ -60,7 +56,6 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile, const char* tes
 	glCompileShader(fragmentShader);
 	// Checks if Shader compiled succesfully
 	compileErrors(fragmentShader, "FRAGMENT");
-    std::cout << "after";
 
     GLuint tessalationControlShader = glCreateShader(GL_TESS_CONTROL_SHADER);
     glShaderSource(tessalationControlShader, 1, &tessalationControlSource, NULL);
@@ -74,14 +69,13 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile, const char* tes
 
 	// Create Shader Program Object and get its reference
 	ID = glCreateProgram();
-	// Attach the Vertex and Fragment Shaders to the Shader Program
+
 	glAttachShader(ID, vertexShader);
 	glAttachShader(ID, fragmentShader);
     glAttachShader(ID, tessalationControlShader);
     glAttachShader(ID, tessalationEvaluationShader);
-	// Wrap-up/Link all the shaders together into the Shader Program
+
 	glLinkProgram(ID);
-	// Checks if Shaders linked succesfully
 	compileErrors(ID, "PROGRAM");
 
 	// Delete the now useless Vertex and Fragment Shader objects
@@ -91,6 +85,35 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile, const char* tes
 	glDeleteShader(tessalationEvaluationShader);
     /* glDeleteShader(tessalationControlShader); */
 
+}
+
+Shader::Shader(const char* vertexFile, const char* fragmentFile) {
+	std::string vertexCode = get_file_contents(vertexFile);
+	std::string fragmentCode = get_file_contents(fragmentFile);
+
+	const char* vertexSource = vertexCode.c_str();
+	const char* fragmentSource = fragmentCode.c_str();
+
+	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &vertexSource, NULL);
+	glCompileShader(vertexShader);
+	compileErrors(vertexShader, "VERTEX");
+
+	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
+	glCompileShader(fragmentShader);
+	compileErrors(fragmentShader, "FRAGMENT");
+
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+
+	ID = glCreateProgram();
+
+	glAttachShader(ID, vertexShader);
+	glAttachShader(ID, fragmentShader);
+
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
 }
 
 // Activates the Shader Program

@@ -53,12 +53,13 @@ GLFWwindow* window;
 /* 	-0.5f, 0.0f ,  0.5f, 0.0f, 1.0f  // Upper left */
 /* }; */
 
-std::vector<GLfloat> vertices;
+std::vector<GLfloat> verticesTess;
+std::vector<GLfloat> verticesCPU;
 std::vector<unsigned int> indices;
 
 void MakePatches(int patchNum, int imgHeight, int imgWidth)
 {
-   vertices.clear();
+   verticesTess.clear();
    for(int i = 0; i < patchNum; i++)
    {
         for(int j = 0; j < patchNum; j++)
@@ -69,50 +70,50 @@ void MakePatches(int patchNum, int imgHeight, int imgWidth)
             //z
             //u
             //v
-            vertices.push_back(-imgWidth/2.0f + imgWidth*j/(float)patchNum);
-            vertices.push_back(0.0f);
-            vertices.push_back(-imgHeight/2.0f + imgHeight*i/(float)patchNum);
-            vertices.push_back(j / (float)patchNum);
-            vertices.push_back(i / (float)patchNum);
+            verticesTess.push_back(-imgWidth/2.0f + imgWidth*j/(float)patchNum);
+            verticesTess.push_back(0.0f);
+            verticesTess.push_back(-imgHeight/2.0f + imgHeight*i/(float)patchNum);
+            verticesTess.push_back(j / (float)patchNum);
+            verticesTess.push_back(i / (float)patchNum);
 
-            vertices.push_back(-imgWidth/2.0f + imgWidth*(j+1)/(float)patchNum);
-            vertices.push_back(0.0f);
-            vertices.push_back(-imgHeight/2.0f + imgHeight*i/(float)patchNum);
-            vertices.push_back((j+1) / (float)patchNum);
-            vertices.push_back(i / (float)patchNum);
+            verticesTess.push_back(-imgWidth/2.0f + imgWidth*(j+1)/(float)patchNum);
+            verticesTess.push_back(0.0f);
+            verticesTess.push_back(-imgHeight/2.0f + imgHeight*i/(float)patchNum);
+            verticesTess.push_back((j+1) / (float)patchNum);
+            verticesTess.push_back(i / (float)patchNum);
 
-            vertices.push_back(-imgWidth/2.0f + imgWidth*(j+1)/(float)patchNum);
-            vertices.push_back(0.0f);
-            vertices.push_back(-imgHeight/2.0f + imgHeight*(i+1)/(float)patchNum);
-            vertices.push_back((j+1) / (float)patchNum);
-            vertices.push_back((i+1) / (float)patchNum);
+            verticesTess.push_back(-imgWidth/2.0f + imgWidth*(j+1)/(float)patchNum);
+            verticesTess.push_back(0.0f);
+            verticesTess.push_back(-imgHeight/2.0f + imgHeight*(i+1)/(float)patchNum);
+            verticesTess.push_back((j+1) / (float)patchNum);
+            verticesTess.push_back((i+1) / (float)patchNum);
                                                          
-            vertices.push_back(-imgWidth/2.0f + imgWidth*j/(float)patchNum);
-            vertices.push_back(0.0f);
-            vertices.push_back(-imgHeight/2.0f + imgHeight*(i+1)/(float)patchNum);
-            vertices.push_back(j / (float)patchNum);
-            vertices.push_back((i+1) / (float)patchNum);
+            verticesTess.push_back(-imgWidth/2.0f + imgWidth*j/(float)patchNum);
+            verticesTess.push_back(0.0f);
+            verticesTess.push_back(-imgHeight/2.0f + imgHeight*(i+1)/(float)patchNum);
+            verticesTess.push_back(j / (float)patchNum);
+            verticesTess.push_back((i+1) / (float)patchNum);
         }
     }
 }
 
-void GenCPUdata(int imgHeight, int imgWidth, unsigned char* data, int nChannels)
+void GenCPUdata(int imgHeight, int imgWidth, int* data, int nChannels)
 {
-    vertices.clear();
+    verticesCPU.clear();
     float yScale = 64.0f / 256.0f, yShift = 16.0f;  // apply a scale+shift to the height data
     for(unsigned int i = 0; i < imgHeight; i++)
     {
         for(unsigned int j = 0; j < imgWidth; j++)
         {
             // retrieve texel for (i,j) tex coord
-            unsigned char* texel = data + (j + width * i) * nChannels;
+            int* texel = data + (j + width * i) * nChannels;
             // raw height at coordinate
-            unsigned char y = texel[0];
+            int y = texel[0];
 
             // vertex
-            vertices.push_back( -imgHeight/2.0f + i);        // v.x
-            vertices.push_back( (int)y * yScale - yShift); // v.y
-            vertices.push_back( -imgWidth/2.0f + j);        // v.z
+            verticesCPU.push_back( -imgHeight/2.0f + i);        // v.x
+            verticesCPU.push_back( y * yScale - yShift); // v.y
+            verticesCPU.push_back( -imgWidth/2.0f + j);        // v.z
         }
     }
 
@@ -161,7 +162,7 @@ GLFWwindow* GLInit()
 }
 
 
-void TextureSetup(int widthImg, int heightImg, Shader& shaderProgram, int* data)
+void TextureSetup(int widthImg, int heightImg, Shader& shaderProgramTess, int* data)
 {
     unsigned int texture;
     glGenTextures(1, &texture); 
@@ -185,7 +186,7 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgram, int* data)
     {
         std::cout << "Failed to load texture" << std::endl;
     }
-    GLuint textureToUni = glGetUniformLocation(shaderProgram.ID, "heightMap");
+    GLuint textureToUni = glGetUniformLocation(shaderProgramTess.ID, "heightMap");
     glUniform1i(textureToUni, 0);
 }
 
@@ -203,53 +204,50 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgram, int* data)
 
 int main()
 {
-    const unsigned int NUM_STRIPS = height-1;
-    const unsigned int NUM_VERTS_PER_STRIP = width*2;
-    bool gpu = true;
-    unsigned patchNum = 20;
-    MakePatches(patchNum, 1000, 1000);
-    /* printVert(); */
-
     int widthImg = 1000;
     int heightImg= 1000;
     Wave wave;
     int data[widthImg] [heightImg];
     wave.test(*data);
+    const unsigned int NUM_STRIPS = height-1;
+    const unsigned int NUM_VERTS_PER_STRIP = width*2;
+    bool gpu = false;
+    unsigned patchNum = 20;
+    MakePatches(patchNum, widthImg, heightImg);
+    GenCPUdata(widthImg, heightImg, *data, 1);
+    /* printVert(); */
+
 
     window = GLInit();
 
 
-    Shader shaderProgram;
-    VAO VAO1;
-    VAO1.Bind();
-    VBO VBO1(vertices, vertices.size()*sizeof(GLfloat));
-    EBO EBO1;
-    if(gpu)
-    {
-        Shader tempShaderProgram("Libraries/Shaders/default.vert", "Libraries/Shaders/default.frag", "Libraries/Shaders/default.tesc", "Libraries/Shaders/default.tese");
-        shaderProgram = tempShaderProgram;
+    VAO VAOTess;
+    VAOTess.Bind();
+    VBO VBOTess(verticesTess, verticesTess.size()*sizeof(GLfloat));
+    Shader shaderProgramTess("Libraries/Shaders/default.vert", "Libraries/Shaders/default.frag", "Libraries/Shaders/default.tesc", "Libraries/Shaders/default.tese");
 
-        /* VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 5*sizeof(float), (void*)0); */
-        /* VAO1.LinkAttribute(VBO1, 1, 2, GL_FLOAT, 5*sizeof(float), (void*)(3*sizeof(float))); */
-        VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 5*sizeof(float), (void*)0);
-        VAO1.LinkAttribute(VBO1, 1, 2, GL_FLOAT, 5*sizeof(float), (void*)(3*sizeof(float)));
+    /* VAOTess.LinkAttribute(VBOTess, 0, 3, GL_FLOAT, 5*sizeof(float), (void*)0); */
+    /* VAOTess.LinkAttribute(VBOTess, 1, 2, GL_FLOAT, 5*sizeof(float), (void*)(3*sizeof(float))); */
+    VAOTess.LinkAttribute(VBOTess, 0, 3, GL_FLOAT, 5*sizeof(float), (void*)0);
+    VAOTess.LinkAttribute(VBOTess, 1, 2, GL_FLOAT, 5*sizeof(float), (void*)(3*sizeof(float)));
 
-        VAO1.Unbind();
-        VBO1.Unbind();
-        TextureSetup(widthImg, heightImg, shaderProgram, *data);
-    }
-    else
-    {
-        EBO cpuEBO(&indices, sizeof(indices));
-        EBO1 = cpuEBO;
+    VAOTess.Unbind();
+    VBOTess.Unbind();
+    TextureSetup(widthImg, heightImg, shaderProgramTess, *data);
 
-        VAO1.LinkAttribute(VBO1, 0, 3, GL_FLOAT, 0, (void*)0);
-        VAO1.Unbind();
-        VBO1.Unbind();
-        EBO1.Unbind();
+
+    Shader shaderProgramCPU("Libraries/Shaders/cpu.vert", "Libraries/Shaders/cpu.frag");
+    VAO VAOCpu;
+    VAOCpu.Bind();
+    VBO VBOCpu(verticesCPU, verticesCPU.size()*sizeof(GLfloat));
+    EBO EBOCpu(&indices, sizeof(indices));
+
+    VAOCpu.LinkAttribute(VBOTess, 0, 3, GL_FLOAT, 3*sizeof(float), (void*)0);
+    VAOCpu.Unbind();
+    VBOCpu.Unbind();
+    EBOCpu.Unbind();
     
-    }
-    shaderProgram.Activate();
+    shaderProgramTess.Activate();
 
     float scale = 0.5f;
     Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
@@ -264,13 +262,32 @@ int main()
 
         camera.Inputs(window, scale);
 
-        camera.Matrix(45.5f, 0.1f, 10000.0f, shaderProgram, "PV");
+        camera.Matrix(45.5f, 0.1f, 10000.0f, shaderProgramTess, "PV");
+        camera.Matrix(45.5f, 0.1f, 10000.0f, shaderProgramCPU, "PV");
 		camera.Inputs(window, scale);
 
         //just wireframe testing
         /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
-		VAO1.Bind();
-		glDrawArrays(GL_PATCHES, 0, 4*patchNum*patchNum); //maybe wrong
+        if(gpu)
+        {
+            shaderProgramTess.Activate(); 
+            VAOTess.Bind();
+            glDrawArrays(GL_PATCHES, 0, 4*patchNum*patchNum); //maybe wrong
+        }
+        else 
+        {
+            shaderProgramCPU.Activate();
+            VAOCpu.Bind();
+            for(unsigned int strip = 0; strip < NUM_STRIPS; ++strip)
+            {
+                glDrawElements(GL_TRIANGLE_STRIP,   // primitive type
+                               NUM_VERTS_PER_STRIP, // number of indices to render
+                               GL_UNSIGNED_INT,     // index data type
+                               (void*)(sizeof(unsigned int)
+                                         * NUM_VERTS_PER_STRIP
+                                         * strip)); // offset to starting index
+            }
+        }
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -278,9 +295,9 @@ int main()
         /* std::cout << "x: " << camera.Position.x << " y: " << camera.Position.y << " z: " << camera.Position.z << std::endl; */
 	}
 
-	VAO1.Delete();
-	VBO1.Delete();
-	shaderProgram.Delete();
+	VAOTess.Delete();
+	VBOTess.Delete();
+	shaderProgramTess.Delete();
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	return 0;
