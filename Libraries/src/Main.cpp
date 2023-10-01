@@ -219,11 +219,16 @@ int main()
     bool gpu = false;
     unsigned patchNum = 20;
     MakePatches(patchNum, widthImg, heightImg);
-
-    std::cout << "weee goood";
     GenCPUdata(data);
-    std::cout << "aaaaaaaaaaaaaaaaaaaaaaaaaa";
 
+    for(int i = 0; i < widthImg; i++)
+    {
+        for(int j = 0; j < heightImg; j++)
+        {
+            std::cout << verticesCPU[i] << " ";
+        }
+        std::cout << "\n";
+    }
 
     window = GLInit();
 
@@ -254,7 +259,7 @@ int main()
     VBOCpu.Unbind();
     EBOCpu.Unbind();
     
-    shaderProgramTess.Activate();
+    /* shaderProgramTess.Activate(); */
 
     float scale = 0.5f;
     Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
