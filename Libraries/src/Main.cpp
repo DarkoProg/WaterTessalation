@@ -60,7 +60,7 @@ std::vector<unsigned int> indices;
 
 void MakePatches(int patchNum, int imgHeight, int imgWidth)
 {
-   verticesTess.clear();
+   /* verticesTess.clear(); */
    for(int i = 0; i < patchNum; i++)
    {
         for(int j = 0; j < patchNum; j++)
@@ -102,7 +102,7 @@ template <size_t imgWidth, size_t imgHeight>
 void GenCPUdata( int (&data)[imgWidth][imgHeight])
 /* void GenCPUdata(int imgHeight, int imgWidth, int (&data)[rows][cols], int nChannels) */
 {
-    verticesCPU.clear();
+    /* verticesCPU.clear(); */
     float yScale = 64.0f / 256.0f, yShift = 16.0f;  // apply a scale+shift to the height data
     for(size_t i = 0; i < imgHeight; i++)
     {
@@ -221,14 +221,16 @@ int main()
     MakePatches(patchNum, widthImg, heightImg);
     GenCPUdata(data);
 
-    for(int i = 0; i < widthImg; i++)
-    {
-        for(int j = 0; j < heightImg; j++)
-        {
-            std::cout << verticesCPU[i] << " ";
-        }
-        std::cout << "\n";
-    }
+    /* for(int i = 0; i < widthImg; i++) */
+    /* { */
+    /*     for(int j = 0; j < heightImg; j++) */
+    /*     { */
+    /*         std::cout << verticesCPU[i] << " "; */
+    /*     } */
+    /*     std::cout << "\n"; */
+    /* } */
+
+    std::cout << verticesCPU[0] << " " << verticesCPU[1] << " " << verticesCPU[2];
 
     window = GLInit();
 
@@ -254,7 +256,7 @@ int main()
     VBO VBOCpu(verticesCPU, verticesCPU.size()*sizeof(GLfloat));
     EBO EBOCpu(&indices, sizeof(indices));
 
-    VAOCpu.LinkAttribute(VBOTess, 0, 3, GL_FLOAT, 3*sizeof(float), (void*)0);
+    VAOCpu.LinkAttribute(VBOCpu, 0, 3, GL_FLOAT, 0, (void*)0);
     VAOCpu.Unbind();
     VBOCpu.Unbind();
     EBOCpu.Unbind();
@@ -272,23 +274,23 @@ int main()
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        camera.Inputs(window, scale);
 
-        camera.Matrix(45.5f, 0.1f, 10000.0f, shaderProgramTess, "PV");
-        camera.Matrix(45.5f, 0.1f, 10000.0f, shaderProgramCPU, "PV");
-		camera.Inputs(window, scale);
 
         //just wireframe testing
         /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
         if(gpu)
         {
             shaderProgramTess.Activate(); 
+            camera.Matrix(45.5f, 0.1f, 10000.0f, shaderProgramTess, "PV");
+            camera.Inputs(window, scale);
             VAOTess.Bind();
             glDrawArrays(GL_PATCHES, 0, 4*patchNum*patchNum); //maybe wrong
         }
         else 
         {
             shaderProgramCPU.Activate();
+            camera.Matrix(45.5f, 0.1f, 10000.0f, shaderProgramCPU, "PV");
+            camera.Inputs(window, scale);
             VAOCpu.Bind();
             for(unsigned int strip = 0; strip < NUM_STRIPS; ++strip)
             {
