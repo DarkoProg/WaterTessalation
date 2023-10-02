@@ -56,7 +56,8 @@ GLFWwindow* window;
 
 std::vector<GLfloat> verticesTess;
 std::vector<GLfloat> verticesCPU;
-std::vector<unsigned int> indices;
+std::vector<GLuint> indices;
+/* std::vector<unsigned int> indices; */
 
 void MakePatches(int patchNum, int imgHeight, int imgWidth)
 {
@@ -214,8 +215,8 @@ int main()
     /* int data[widthImg] [heightImg]; */
     int data[1000] [1000];
     wave.test(*data);
-    const unsigned int NUM_STRIPS = height-1;
-    const unsigned int NUM_VERTS_PER_STRIP = width*2;
+    const unsigned int NUM_STRIPS = heightImg-1;
+    const unsigned int NUM_VERTS_PER_STRIP = widthImg*2;
     bool gpu = false;
     unsigned patchNum = 20;
     MakePatches(patchNum, widthImg, heightImg);
@@ -230,7 +231,7 @@ int main()
     /*     std::cout << "\n"; */
     /* } */
 
-    std::cout << verticesCPU[0] << " " << verticesCPU[1] << " " << verticesCPU[2];
+    /* std::cout << verticesCPU[0] << " " << verticesCPU[1] << " " << verticesCPU[2]; */
 
     window = GLInit();
 
@@ -254,7 +255,8 @@ int main()
     VAO VAOCpu;
     VAOCpu.Bind();
     VBO VBOCpu(verticesCPU, verticesCPU.size()*sizeof(GLfloat));
-    EBO EBOCpu(&indices, sizeof(indices));
+    /* EBO EBOCpu(&indices, sizeof(indices)); */
+    EBO EBOCpu(indices, sizeof(indices));
 
     VAOCpu.LinkAttribute(VBOCpu, 0, 3, GL_FLOAT, 0, (void*)0);
     VAOCpu.Unbind();
@@ -265,7 +267,6 @@ int main()
 
     float scale = 0.5f;
     Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
-
 
 
 	// Main while loop
@@ -302,7 +303,6 @@ int main()
                                          * strip)); // offset to starting index
             }
         }
-
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
