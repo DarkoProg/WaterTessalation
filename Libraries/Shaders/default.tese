@@ -30,7 +30,7 @@ void main()
     float u = gl_TessCoord.x;
     float v = gl_TessCoord.y;
 
-    Height = BilinearInterpolation(u,v) * 10;
+    Height = BilinearInterpolation(u,v) * 5 + 2;
 
     vec4 p00 = gl_in[0].gl_Position;
     vec4 p01 = gl_in[1].gl_Position;
