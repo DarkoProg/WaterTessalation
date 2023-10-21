@@ -116,9 +116,10 @@ void GenCPUdata( int (&data)[imgWidth][imgHeight])
             /* int y = texel; */
 
             // vertex
-            verticesCPU.push_back( -imgHeight/2.0f + i);        // v.x
-            verticesCPU.push_back( y * yScale - yShift); // v.y
-            verticesCPU.push_back( -imgWidth/2.0f + j);        // v.z
+            verticesCPU.push_back( -(float)imgHeight/2.0f + i);        // v.x
+            /* verticesCPU.push_back( y * yScale - yShift); // v.y */
+            verticesCPU.push_back(y / 64.0f + 1.0f); // v.y
+            verticesCPU.push_back( -(float)imgWidth/2.0f + j);        // v.z
         }
     }
 
@@ -217,7 +218,7 @@ int main()
     wave.test(*data);
     const unsigned int NUM_STRIPS = heightImg-1;
     const unsigned int NUM_VERTS_PER_STRIP = widthImg*2;
-    bool gpu = false;
+    bool gpu = true;
     unsigned patchNum = 20;
     MakePatches(patchNum, widthImg, heightImg);
     GenCPUdata(data);
@@ -251,14 +252,14 @@ int main()
     TextureSetup(widthImg, heightImg, shaderProgramTess, *data);
 
 
-    Shader shaderProgramCPU("Libraries/Shaders/cpu.vert", "Libraries/Shaders/cpu.frag");
     VAO VAOCpu;
     VAOCpu.Bind();
     VBO VBOCpu(verticesCPU, verticesCPU.size()*sizeof(GLfloat));
+    Shader shaderProgramCPU("Libraries/Shaders/cpu.vert", "Libraries/Shaders/cpu.frag");
     /* EBO EBOCpu(&indices, sizeof(indices)); */
-    EBO EBOCpu(indices, sizeof(indices));
+    EBO EBOCpu(indices, indices.size()*sizeof(GLuint));
 
-    VAOCpu.LinkAttribute(VBOCpu, 0, 3, GL_FLOAT, 0, (void*)0);
+    VAOCpu.LinkAttribute(VBOCpu, 0, 3, GL_FLOAT, 3*sizeof(float), (void*)0);
     VAOCpu.Unbind();
     VBOCpu.Unbind();
     EBOCpu.Unbind();
@@ -293,7 +294,7 @@ int main()
             camera.Matrix(45.5f, 0.1f, 10000.0f, shaderProgramCPU, "PV");
             camera.Inputs(window, scale);
             VAOCpu.Bind();
-            for(unsigned int strip = 0; strip < NUM_STRIPS; ++strip)
+        for(unsigned int strip = 0; strip < NUM_STRIPS; ++strip)
             {
                 glDrawElements(GL_TRIANGLE_STRIP,   // primitive type
                                NUM_VERTS_PER_STRIP, // number of indices to render
@@ -302,6 +303,7 @@ int main()
                                          * NUM_VERTS_PER_STRIP
                                          * strip)); // offset to starting index
             }
+            /* glDrawElements(GL_TRIANGLES, 1000, GL_UNSIGNED_INT, 0); */
         }
 		glfwSwapBuffers(window);
 		glfwPollEvents();
