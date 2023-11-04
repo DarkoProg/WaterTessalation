@@ -20,6 +20,7 @@ public:
 	void Unbind();
 	// Deletes the EBO
 	void Delete();
+    void Buffer(std::vector<GLuint>& indices, GLsizeiptr size);
 };
 
 #endif

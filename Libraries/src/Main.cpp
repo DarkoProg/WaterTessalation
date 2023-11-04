@@ -30,34 +30,10 @@ const unsigned int width = 1000;
 const unsigned int height = 1000;
 GLFWwindow* window; 
 
-/* GLfloat vertices[] = */
-/* { */
-/* 	-0.5f, -0.5f , 0.0f, 0.0f, 0.0f, // Lower left corner */
-/* 	 0.5f, -0.5f , 0.0f, 1.0f, 0.0f, // Lower right corner */
-/* 	 0.5f,  0.5f , 0.0f, 1.0f, 1.0f, // Upper right */
-/* 	-0.5f,  0.5f , 0.0f, 0.0f, 1.0f  // Upper left */
-/* }; */
-
-/* GLfloat vertices[] = */
-/* { */
-/* 	-10.0f, 0.0f , -10.0f, 0.0f, 0.0f, // Lower left corner */
-/* 	 10.0f, 0.0f , -10.0f, 1.0f, 0.0f, // Lower right corner */
-/* 	 10.0f, 0.0f ,  10.0f, 1.0f, 1.0f, // Upper right */
-/* 	-10.0f, 0.0f ,  10.0f, 0.0f, 1.0f  // Upper left */
-/* }; */
-
-/* GLfloat vertices[] = */
-/* { */
-/* 	-0.5f, 0.0f , -0.5f, 0.0f, 0.0f, // Lower left corner */
-/* 	 0.5f, 0.0f , -0.5f, 1.0f, 0.0f, // Lower right corner */
-/* 	 0.5f, 0.0f ,  0.5f, 1.0f, 1.0f, // Upper right */
-/* 	-0.5f, 0.0f ,  0.5f, 0.0f, 1.0f  // Upper left */
-/* }; */
 
 std::vector<GLfloat> verticesTess;
 std::vector<GLfloat> verticesCPU;
 std::vector<GLuint> indices;
-/* std::vector<unsigned int> indices; */
 
 void MakePatches(int patchNum, int imgHeight, int imgWidth)
 {
@@ -103,7 +79,7 @@ template <size_t imgWidth, size_t imgHeight>
 void GenCPUdata( int (&data)[imgWidth][imgHeight])
 /* void GenCPUdata(int imgHeight, int imgWidth, int (&data)[rows][cols], int nChannels) */
 {
-    /* verticesCPU.clear(); */
+    verticesCPU.clear();
     float yScale = 64.0f / 256.0f, yShift = 16.0f;  // apply a scale+shift to the height data
     for(size_t i = 0; i < imgHeight; i++)
     {
@@ -196,43 +172,22 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgramTess, int* d
     glUniform1i(textureToUni, 0);
 }
 
-/* void printVert() */
-/* { */
-/*     for(int i = 0; i < vertices.size()/5; i++) */
-/*     { */
-/*         for( int z = 0; z < 5; z++) */
-/*         { */
-/*             std::cout << vertices[i*5+z] << ", "; */
-/*         } */
-/*         std::cout << "\n"; */
-/*     } */
-/* } */
-
 int main()
 {
-    int widthImg = 1000;
-    int heightImg= 1000;
-    Wave wave;
+    int widthImg = 500;
+    int heightImg= 500;
+    Wave wave(widthImg, heightImg);
     /* int data[widthImg] [heightImg]; */
-    int data[1000] [1000];
-    wave.test(*data);
+    int data[500] [500];
+    std::cout << "before wave data";
+    wave.GenWave(*data, 0);
     const unsigned int NUM_STRIPS = heightImg-1;
     const unsigned int NUM_VERTS_PER_STRIP = widthImg*2;
-    bool gpu = true;
-    unsigned patchNum = 20;
+    bool gpu = false;
+    unsigned patchNum = 10;
+    std::cout << "before arrays";
     MakePatches(patchNum, widthImg, heightImg);
     GenCPUdata(data);
-
-    /* for(int i = 0; i < widthImg; i++) */
-    /* { */
-    /*     for(int j = 0; j < heightImg; j++) */
-    /*     { */
-    /*         std::cout << verticesCPU[i] << " "; */
-    /*     } */
-    /*     std::cout << "\n"; */
-    /* } */
-
-    /* std::cout << verticesCPU[0] << " " << verticesCPU[1] << " " << verticesCPU[2]; */
 
     window = GLInit();
 
@@ -249,7 +204,7 @@ int main()
 
     VAOTess.Unbind();
     VBOTess.Unbind();
-    TextureSetup(widthImg, heightImg, shaderProgramTess, *data);
+    /* TextureSetup(widthImg, heightImg, shaderProgramTess, *data); */
 
 
     VAO VAOCpu;
@@ -269,13 +224,17 @@ int main()
     float scale = 0.5f;
     Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
+    float time = 0;
 
+    std::cout << "before loop";
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        
+        wave.GenWave(*data, time);
+        TextureSetup(widthImg, heightImg, shaderProgramTess, *data);
 
 
         //just wireframe testing
@@ -291,6 +250,11 @@ int main()
         else 
         {
             shaderProgramCPU.Activate();
+            GenCPUdata(data);
+            VBOCpu.Bind();
+            VBOCpu.Buffer(verticesCPU, verticesCPU.size()*sizeof(GLfloat));
+            VBOCpu.Unbind();
+
             camera.Matrix(45.5f, 0.1f, 10000.0f, shaderProgramCPU, "PV");
             camera.Inputs(window, scale);
             VAOCpu.Bind();
@@ -308,12 +272,19 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
+        (time < 1000) ? time += 0.02f : time = 0;
+        std::cout << time << std::endl;
+        
         /* std::cout << "x: " << camera.Position.x << " y: " << camera.Position.y << " z: " << camera.Position.z << std::endl; */
 	}
 
 	VAOTess.Delete();
 	VBOTess.Delete();
+    VAOCpu.Delete();
+    VBOCpu.Delete();
+    EBOCpu.Delete();
 	shaderProgramTess.Delete();
+    shaderProgramCPU.Delete();
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	return 0;

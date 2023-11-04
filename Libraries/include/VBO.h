@@ -14,6 +14,9 @@ public:
 	VBO(std::vector<GLfloat> & vertices, GLsizeiptr size);
 	/* VBO(GLfloat* vertices, GLsizeiptr size); */
 
+
+    void Buffer(std::vector<GLfloat> & vertices, GLsizeiptr size);
+
 	// Binds the VBO
 	void Bind();
 	// Unbinds the VBO

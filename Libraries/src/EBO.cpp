@@ -19,6 +19,10 @@ void EBO::Bind()
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID);
 }
+void EBO::Buffer(std::vector<GLuint>& indices, GLsizeiptr size)
+{
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, &indices[0], GL_STATIC_DRAW);
+}
 
 // Unbinds the EBO
 void EBO::Unbind()

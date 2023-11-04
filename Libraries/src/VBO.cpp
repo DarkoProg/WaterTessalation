@@ -19,6 +19,10 @@ void VBO::Bind()
 	glBindBuffer(GL_ARRAY_BUFFER, ID);
 }
 
+void VBO::Buffer(std::vector<GLfloat> & vertices, GLsizeiptr size)
+{
+	glBufferData(GL_ARRAY_BUFFER, size, &vertices[0], GL_STATIC_DRAW);
+}
 // Unbinds the VBO
 void VBO::Unbind()
 {

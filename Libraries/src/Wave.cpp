@@ -14,13 +14,11 @@ Wave::Wave(int inputHeight, int inputWidth)
 }
 
 /* template<typename T, std::size_t N, std::size_t M> */
-void Wave::test(int (*waveTexture))
+void Wave::GenWave(int (*waveTexture), float t)
 {
     float maxValue = 0;
     float minValue = 0;
 
-    for(double t = 0; t < 1; t++)
-    {
         //starts at 1, otherwise the first pixel will be 0 always
         for(int y = 1; y <= height; y++)
         {
@@ -45,7 +43,6 @@ void Wave::test(int (*waveTexture))
             
         }
 
-    }
     /* std::cout << "max: " << maxValue << std::endl; */
     /* std::cout << "min: " << minValue << std::endl; */
 }

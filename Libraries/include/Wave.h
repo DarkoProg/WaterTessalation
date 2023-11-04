@@ -43,7 +43,7 @@ public:
     Wave(int inputHeight, int inputWidth);
 
     /* template<typename T, std::size_t N, std::size_t M> */
-    void test(int (*waveTexture));
+    void GenWave(int (*waveTexture), float t);
     /* void test(); */
     double SelectWaves(float x, float y, float t, float k, float wavelength, float amplitude, float speed, glm::vec3 direction);
     glm::mat3 Surf2World(int x, int y, double waveDerivitive);
