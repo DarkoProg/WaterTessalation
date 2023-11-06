@@ -183,7 +183,7 @@ int main()
     wave.GenWave(*data, 0);
     const unsigned int NUM_STRIPS = heightImg-1;
     const unsigned int NUM_VERTS_PER_STRIP = widthImg*2;
-    bool gpu = false;
+    bool gpu = true;
     unsigned patchNum = 10;
     std::cout << "before arrays";
     MakePatches(patchNum, widthImg, heightImg);
