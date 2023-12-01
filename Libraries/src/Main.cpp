@@ -1,6 +1,7 @@
 #include "../include/glad.h"
 #include "glm/gtx/string_cast.hpp"
 #include <GLFW/glfw3.h>
+#include <bits/chrono.h>
 #include <cstddef>
 #include <cstdio>
 #include <cstdlib>
@@ -18,6 +19,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <chrono>
 
 #include "../include/Camera.h"
 #include "../include/EBO.h"
@@ -25,7 +27,7 @@
 #include "../include/VBO.h"
 #include "../include/shaderClass.h"
 #include "../include/Wave.h"
- 
+
 const unsigned int width = 1000;
 const unsigned int height = 1000;
 GLFWwindow* window; 
@@ -174,11 +176,13 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgramTess, int* d
 
 int main()
 {
-    int widthImg = 500;
-    int heightImg= 500;
+    int widthImg = 1000;
+    int heightImg= 1000;
+    /* std::cout << "before wave data"; */
     Wave wave(widthImg, heightImg);
+    /* Wave wave; */
     /* int data[widthImg] [heightImg]; */
-    int data[500] [500];
+    int data[1000] [1000];
     std::cout << "before wave data";
     wave.GenWave(*data, 0);
     const unsigned int NUM_STRIPS = heightImg-1;
@@ -189,6 +193,7 @@ int main()
     MakePatches(patchNum, widthImg, heightImg);
     GenCPUdata(data);
 
+    std::cout << "before loop";
     window = GLInit();
 
 
@@ -226,7 +231,7 @@ int main()
 
     float time = 0;
 
-    std::cout << "before loop";
+    /* std::cout << "before loop"; */
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -239,6 +244,9 @@ int main()
 
         //just wireframe testing
         /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
+
+        auto start = std::chrono::high_resolution_clock::now();
+
         if(gpu)
         {
             shaderProgramTess.Activate(); 
@@ -272,8 +280,12 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
+        auto stop = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+        std::cout << "time needed: " << duration.count() << " microseconds" << std::endl;
+        break;
         (time < 1000) ? time += 0.02f : time = 0;
-        std::cout << time << std::endl;
+        /* std::cout << time << std::endl; */
         
         /* std::cout << "x: " << camera.Position.x << " y: " << camera.Position.y << " z: " << camera.Position.z << std::endl; */
 	}

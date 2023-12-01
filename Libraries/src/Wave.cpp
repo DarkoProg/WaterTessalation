@@ -3,14 +3,15 @@
 
 Wave::Wave()
 {
-    height = 1000;
-    width  = 1000;
+    height = 2000;
+    width  = 2000;
 }
 
 Wave::Wave(int inputHeight, int inputWidth)
 {
-    height = inputHeight;
-    width  = inputWidth;
+    std::cout << "???????????????";
+    this->height = inputHeight;
+    this->width  = inputWidth;
 }
 
 /* template<typename T, std::size_t N, std::size_t M> */
