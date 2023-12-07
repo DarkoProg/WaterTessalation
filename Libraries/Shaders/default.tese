@@ -15,7 +15,7 @@ float BilinearInterpolation(float u, float v)
     vec2 t00 = Texture_ES_in[0];
     vec2 t01 = Texture_ES_in[1];
     vec2 t11 = Texture_ES_in[2];
-    vec2 t10 = Texture_ES_in[3];
+    vec2 t10 = Texture_ES_in[1];
 
     vec2 t0 = (t01 - t00) * u + t00;
     vec2 t1 = (t11 - t10) * u + t10;
