@@ -149,19 +149,20 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgramTess, int* d
     unsigned int texture;
     glGenTextures(1, &texture); 
     glBindTexture(GL_TEXTURE_2D, texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    if (*data)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthImg, heightImg, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     /* glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE ); */
+    /* glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP); */
+    /* glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP); */
+    /* glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); */
+    /* glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); */
     /* glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST ); */
     /* glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR ); */
     /* glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR ); */
     /* glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR ); */
+
+    if (*data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthImg, heightImg, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        /* glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, widthImg, heightImg, 0, GL_RGB, GL_UNSIGNED_BYTE, data); */
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else
@@ -174,17 +175,17 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgramTess, int* d
 
 int main()
 {
-    int widthImg = 500;
-    int heightImg= 500;
+    int widthImg = 1000;
+    int heightImg= 1000;
     Wave wave(widthImg, heightImg);
     /* int data[widthImg] [heightImg]; */
-    int data[500] [500];
+    int data[1000] [1000];
     std::cout << "before wave data";
     wave.GenWave(*data, 0);
     const unsigned int NUM_STRIPS = heightImg-1;
     const unsigned int NUM_VERTS_PER_STRIP = widthImg*2;
     bool gpu = true;
-    unsigned patchNum = 10;
+    unsigned patchNum = 20;
     std::cout << "before arrays";
     MakePatches(patchNum, widthImg, heightImg);
     GenCPUdata(data);
