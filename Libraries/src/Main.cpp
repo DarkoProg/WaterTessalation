@@ -26,8 +26,8 @@
 #include "../include/shaderClass.h"
 #include "../include/Wave.h"
  
-const unsigned int width = 1000;
-const unsigned int height = 1000;
+/* const unsigned int width = 1000; */
+/* const unsigned int height = 1000; */
 GLFWwindow* window; 
 
 
@@ -37,7 +37,7 @@ std::vector<GLuint> indices;
 
 void MakePatches(int patchNum, int imgHeight, int imgWidth)
 {
-   /* verticesTess.clear(); */
+   verticesTess.clear();
    for(int i = 0; i < patchNum; i++)
    {
         for(int j = 0; j < patchNum; j++)
@@ -73,44 +73,6 @@ void MakePatches(int patchNum, int imgHeight, int imgWidth)
             verticesTess.push_back((i+1) / (float)patchNum);
         }
     }
-}
-
-template <size_t imgWidth, size_t imgHeight>
-void GenCPUdata( int (&data)[imgWidth][imgHeight])
-/* void GenCPUdata(int imgHeight, int imgWidth, int (&data)[rows][cols], int nChannels) */
-{
-    verticesCPU.clear();
-    float yScale = 64.0f / 256.0f, yShift = 16.0f;  // apply a scale+shift to the height data
-    for(size_t i = 0; i < imgHeight; i++)
-    {
-        for(size_t j = 0; j < imgWidth; j++)
-        {
-            // retrieve texel for (i,j) tex coord
-            /* int texel = (data + (j + width * i) * nChannels); */
-            int y = data[i][j];
-            // raw height at coordinate
-            /* int y = texel; */
-
-            // vertex
-            verticesCPU.push_back( -(float)imgHeight/2.0f + i);        // v.x
-            /* verticesCPU.push_back( y * yScale - yShift); // v.y */
-            verticesCPU.push_back(y / 64.0f + 1.0f); // v.y
-            verticesCPU.push_back( -(float)imgWidth/2.0f + j);        // v.z
-        }
-    }
-
-    for(unsigned int i = 0; i < imgHeight-1; i++)       // for each row a.k.a. each strip
-    {
-        for(unsigned int j = 0; j < imgWidth; j++)      // for each column
-        {
-            for(unsigned int k = 0; k < 2; k++)      // for each side of the strip
-            {
-                indices.push_back(j + imgWidth * (i + k));
-            }
-        }
-    }
-
-
 }
 
 
@@ -157,11 +119,6 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgramTess, int* d
     if (*data)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthImg, heightImg, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    /* glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE ); */
-    /* glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST ); */
-    /* glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR ); */
-    /* glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR ); */
-    /* glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR ); */
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else
@@ -177,17 +134,12 @@ int main()
     int widthImg = 500;
     int heightImg= 500;
     Wave wave(widthImg, heightImg);
-    /* int data[widthImg] [heightImg]; */
-    int data[500] [500];
+    int data[1000] [1000];
     std::cout << "before wave data";
     wave.GenWave(*data, 0);
-    const unsigned int NUM_STRIPS = heightImg-1;
-    const unsigned int NUM_VERTS_PER_STRIP = widthImg*2;
-    bool gpu = false;
-    unsigned patchNum = 10;
+    unsigned patchNum = 16;
     std::cout << "before arrays";
-    MakePatches(patchNum, widthImg, heightImg);
-    GenCPUdata(data);
+    MakePatches(patchNum, 500, 500);
 
     window = GLInit();
 
@@ -197,8 +149,6 @@ int main()
     VBO VBOTess(verticesTess, verticesTess.size()*sizeof(GLfloat));
     Shader shaderProgramTess("Libraries/Shaders/default.vert", "Libraries/Shaders/default.frag", "Libraries/Shaders/default.tesc", "Libraries/Shaders/default.tese");
 
-    /* VAOTess.LinkAttribute(VBOTess, 0, 3, GL_FLOAT, 5*sizeof(float), (void*)0); */
-    /* VAOTess.LinkAttribute(VBOTess, 1, 2, GL_FLOAT, 5*sizeof(float), (void*)(3*sizeof(float))); */
     VAOTess.LinkAttribute(VBOTess, 0, 3, GL_FLOAT, 5*sizeof(float), (void*)0);
     VAOTess.LinkAttribute(VBOTess, 1, 2, GL_FLOAT, 5*sizeof(float), (void*)(3*sizeof(float)));
 
@@ -206,23 +156,29 @@ int main()
     VBOTess.Unbind();
     /* TextureSetup(widthImg, heightImg, shaderProgramTess, *data); */
 
-
-    VAO VAOCpu;
-    VAOCpu.Bind();
-    VBO VBOCpu(verticesCPU, verticesCPU.size()*sizeof(GLfloat));
-    Shader shaderProgramCPU("Libraries/Shaders/cpu.vert", "Libraries/Shaders/cpu.frag");
-    /* EBO EBOCpu(&indices, sizeof(indices)); */
-    EBO EBOCpu(indices, indices.size()*sizeof(GLuint));
-
-    VAOCpu.LinkAttribute(VBOCpu, 0, 3, GL_FLOAT, 3*sizeof(float), (void*)0);
-    VAOCpu.Unbind();
-    VBOCpu.Unbind();
-    EBOCpu.Unbind();
-    
     /* shaderProgramTess.Activate(); */
 
     float scale = 0.5f;
-    Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
+    Camera camera(500, 500, glm::vec3(0.0f, 0.0f, 2.0f));
+
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    // set the texture wrapping/filtering options (on the currently bound texture object)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // load and generate the texture
+    if (data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+    {
+        std::cout << "Failed to load texture" << std::endl;
+    }
 
     float time = 0;
 
@@ -233,58 +189,24 @@ int main()
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        wave.GenWave(*data, time);
-        TextureSetup(widthImg, heightImg, shaderProgramTess, *data);
-
 
         //just wireframe testing
         /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
-        if(gpu)
-        {
-            shaderProgramTess.Activate(); 
-            camera.Matrix(45.5f, 0.1f, 10000.0f, shaderProgramTess, "PV");
-            camera.Inputs(window, scale);
-            VAOTess.Bind();
-            glDrawArrays(GL_PATCHES, 0, 4*patchNum*patchNum); //maybe wrong
-        }
-        else 
-        {
-            shaderProgramCPU.Activate();
-            GenCPUdata(data);
-            VBOCpu.Bind();
-            VBOCpu.Buffer(verticesCPU, verticesCPU.size()*sizeof(GLfloat));
-            VBOCpu.Unbind();
-
-            camera.Matrix(45.5f, 0.1f, 10000.0f, shaderProgramCPU, "PV");
-            camera.Inputs(window, scale);
-            VAOCpu.Bind();
-        for(unsigned int strip = 0; strip < NUM_STRIPS; ++strip)
-            {
-                glDrawElements(GL_TRIANGLE_STRIP,   // primitive type
-                               NUM_VERTS_PER_STRIP, // number of indices to render
-                               GL_UNSIGNED_INT,     // index data type
-                               (void*)(sizeof(unsigned int)
-                                         * NUM_VERTS_PER_STRIP
-                                         * strip)); // offset to starting index
-            }
-            /* glDrawElements(GL_TRIANGLES, 1000, GL_UNSIGNED_INT, 0); */
-        }
+        shaderProgramTess.Activate(); 
+        camera.Matrix(45.5f, 0.1f, 10000.0f, shaderProgramTess, "PV");
+        camera.Inputs(window, scale);
+        VAOTess.Bind();
+        glDrawArrays(GL_PATCHES, 0, 4*patchNum*patchNum); //maybe wrong
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
-        (time < 1000) ? time += 0.02f : time = 0;
-        std::cout << time << std::endl;
         
         /* std::cout << "x: " << camera.Position.x << " y: " << camera.Position.y << " z: " << camera.Position.z << std::endl; */
 	}
 
 	VAOTess.Delete();
 	VBOTess.Delete();
-    VAOCpu.Delete();
-    VBOCpu.Delete();
-    EBOCpu.Delete();
 	shaderProgramTess.Delete();
-    shaderProgramCPU.Delete();
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	return 0;

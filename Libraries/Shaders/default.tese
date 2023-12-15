@@ -22,7 +22,7 @@ float BilinearInterpolation(float u, float v)
     vec2 textureCordinate = (t1 - t0) * v + t0;
     /* vec2 textureCordinate = v * ((1-u) * t00 + u * t01) - (1-v) * ((1-u) * t10 + u * t11); */
     /* vec2 textureCordinate = u * ((1-v) * t00 + v * t01) - (1-u) * ((1-v) * t10 + v * t11); */
-    return texture(heightMap, textureCordinate).z;
+    return texture(heightMap, textureCordinate).x;
 }
 
 void main()
