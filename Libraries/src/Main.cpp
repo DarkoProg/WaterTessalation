@@ -159,7 +159,7 @@ int main()
     /* shaderProgramTess.Activate(); */
 
     float scale = 0.5f;
-    Camera camera(500, 500, glm::vec3(0.0f, 0.0f, 2.0f));
+    Camera camera(1000, 1000, glm::vec3(10.0f, 50.0f, 500.0f));
 
     unsigned int texture;
     glGenTextures(1, &texture);
