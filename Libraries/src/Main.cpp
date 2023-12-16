@@ -86,7 +86,7 @@ GLFWwindow* GLInit()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* windowi = glfwCreateWindow(800, 800, "Diplomska", NULL, NULL);
+	GLFWwindow* windowi = glfwCreateWindow(1920, 1080, "Diplomska", NULL, NULL);
 	if (windowi == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -94,7 +94,7 @@ GLFWwindow* GLInit()
 	}
 	glfwMakeContextCurrent(windowi);
 	gladLoadGL();
-	glViewport(0, 0, 800, 800);
+	glViewport(0, 0, 1920, 1080);
 
     GLint MaxPatchVertices = 0;
     glGetIntegerv(GL_MAX_PATCH_VERTICES, &MaxPatchVertices);
@@ -159,7 +159,7 @@ int main()
     /* shaderProgramTess.Activate(); */
 
     float scale = 0.5f;
-    Camera camera(1000, 1000, glm::vec3(10.0f, 50.0f, 500.0f));
+    Camera camera(1920, 1080, glm::vec3(-500.0f, 50.0f, 500.0f));
 
     unsigned int texture;
     glGenTextures(1, &texture);

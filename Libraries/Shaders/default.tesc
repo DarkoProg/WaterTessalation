@@ -10,7 +10,7 @@ out vec2 Texture_ES_in[];
 
 void main()
 {
-    int tessNum = 64;
+    int tessNum = 128;
 
     gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
     Texture_ES_in[gl_InvocationID] = Texture_CS_in[gl_InvocationID];
