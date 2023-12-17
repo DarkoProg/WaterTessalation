@@ -124,7 +124,7 @@ GLFWwindow* GLInit()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* windowi = glfwCreateWindow(800, 800, "Diplomska", NULL, NULL);
+	GLFWwindow* windowi = glfwCreateWindow(1920, 1080, "Diplomska", NULL, NULL);
 	if (windowi == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -132,7 +132,7 @@ GLFWwindow* GLInit()
 	}
 	glfwMakeContextCurrent(windowi);
 	gladLoadGL();
-	glViewport(0, 0, 800, 800);
+	glViewport(0, 0, 1920, 1080);
 
     GLint MaxPatchVertices = 0;
     glGetIntegerv(GL_MAX_PATCH_VERTICES, &MaxPatchVertices);
@@ -174,11 +174,11 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgramTess, int* d
 
 int main()
 {
-    int widthImg = 500;
-    int heightImg= 500;
+    int widthImg = 200;
+    int heightImg= 200;
     Wave wave(widthImg, heightImg);
     /* int data[widthImg] [heightImg]; */
-    int data[500] [500];
+    int data[200] [200];
     std::cout << "before wave data";
     wave.GenWave(*data, 0);
     const unsigned int NUM_STRIPS = heightImg-1;
@@ -222,58 +222,42 @@ int main()
     /* shaderProgramTess.Activate(); */
 
     float scale = 0.5f;
-    Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
+    Camera camera(width, height, glm::vec3(-200.0f, 50.0f, 200.0f));
 
     float time = 0;
 
-    std::cout << "before loop";
+    wave.GenWave(*data, time);
+    TextureSetup(widthImg, heightImg, shaderProgramTess, *data);
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        wave.GenWave(*data, time);
-        TextureSetup(widthImg, heightImg, shaderProgramTess, *data);
+        shaderProgramCPU.Activate();
+        GenCPUdata(data);
+        VBOCpu.Bind();
+        VBOCpu.Buffer(verticesCPU, verticesCPU.size()*sizeof(GLfloat));
+        VBOCpu.Unbind();
 
-
-        //just wireframe testing
-        /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
-        if(gpu)
+        camera.Matrix(45.5f, 0.1f, 10000.0f, shaderProgramCPU, "PV");
+        camera.Inputs(window, scale);
+        VAOCpu.Bind();
+    for(unsigned int strip = 0; strip < NUM_STRIPS; ++strip)
         {
-            shaderProgramTess.Activate(); 
-            camera.Matrix(45.5f, 0.1f, 10000.0f, shaderProgramTess, "PV");
-            camera.Inputs(window, scale);
-            VAOTess.Bind();
-            glDrawArrays(GL_PATCHES, 0, 4*patchNum*patchNum); //maybe wrong
+            glDrawElements(GL_TRIANGLE_STRIP,   // primitive type
+                           NUM_VERTS_PER_STRIP, // number of indices to render
+                           GL_UNSIGNED_INT,     // index data type
+                           (void*)(sizeof(unsigned int)
+                                     * NUM_VERTS_PER_STRIP
+                                     * strip)); // offset to starting index
         }
-        else 
-        {
-            shaderProgramCPU.Activate();
-            GenCPUdata(data);
-            VBOCpu.Bind();
-            VBOCpu.Buffer(verticesCPU, verticesCPU.size()*sizeof(GLfloat));
-            VBOCpu.Unbind();
 
-            camera.Matrix(45.5f, 0.1f, 10000.0f, shaderProgramCPU, "PV");
-            camera.Inputs(window, scale);
-            VAOCpu.Bind();
-        for(unsigned int strip = 0; strip < NUM_STRIPS; ++strip)
-            {
-                glDrawElements(GL_TRIANGLE_STRIP,   // primitive type
-                               NUM_VERTS_PER_STRIP, // number of indices to render
-                               GL_UNSIGNED_INT,     // index data type
-                               (void*)(sizeof(unsigned int)
-                                         * NUM_VERTS_PER_STRIP
-                                         * strip)); // offset to starting index
-            }
-            /* glDrawElements(GL_TRIANGLES, 1000, GL_UNSIGNED_INT, 0); */
-        }
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
-        (time < 1000) ? time += 0.02f : time = 0;
-        std::cout << time << std::endl;
+        /* (time < 1000) ? time += 0.02f : time = 0; */
+        /* std::cout << time << std::endl; */
         
         /* std::cout << "x: " << camera.Position.x << " y: " << camera.Position.y << " z: " << camera.Position.z << std::endl; */
 	}
