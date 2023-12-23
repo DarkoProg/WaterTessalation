@@ -1,6 +1,7 @@
 #include "../include/glad.h"
 #include "glm/gtx/string_cast.hpp"
 #include <GLFW/glfw3.h>
+#include <bits/chrono.h>
 #include <cstddef>
 #include <cstdio>
 #include <cstdlib>
@@ -18,6 +19,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <chrono>
 
 #include "../include/Camera.h"
 #include "../include/EBO.h"
@@ -96,9 +98,9 @@ GLFWwindow* GLInit()
 	gladLoadGL();
 	glViewport(0, 0, 800, 800);
 
-    GLint MaxPatchVertices = 0;
-    glGetIntegerv(GL_MAX_PATCH_VERTICES, &MaxPatchVertices);
-    printf("Max supported patch vertices %d\n", MaxPatchVertices);
+    /* GLint MaxPatchVertices = 0; */
+    /* glGetIntegerv(GL_MAX_PATCH_VERTICES, &MaxPatchVertices); */
+    /* printf("Max supported patch vertices %d\n", MaxPatchVertices); */
 
     glPatchParameteri(GL_PATCH_VERTICES, 4);
     glEnable(GL_DEPTH_TEST);
@@ -131,18 +133,27 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgramTess, int* d
 
 int main()
 {
-    int widthImg = 500;
-    int heightImg= 500;
+    int widthImg = 100;
+    int heightImg= 100;
     Wave wave(widthImg, heightImg);
-    int data[1000] [1000];
-    std::cout << "before wave data";
+    int data[100] [100];
+    /* std::cout << "before wave data"; */
     wave.GenWave(*data, 0);
     unsigned patchNum = 16;
-    std::cout << "before arrays";
-    MakePatches(patchNum, 500, 500);
+    /* std::cout << "before arrays"; */
+    MakePatches(patchNum, widthImg, widthImg);
+    std::cout << "number of points: " << verticesTess.size()/5 << std::endl;
+
 
     window = GLInit();
 
+    /* int done = 0; */
+    GLint feedbackID;
+    GLint primitivesNum;
+    unsigned int querries[1];
+    glGenQueries(1, querries);
+
+    /* glBeginQuery(GL_PRIMITIVES_GENERATED, querries[0]); */
 
     VAO VAOTess;
     VAOTess.Bind();
@@ -154,6 +165,18 @@ int main()
 
     VAOTess.Unbind();
     VBOTess.Unbind();
+
+    /* glEndQuery(GL_PRIMITIVES_GENERATED); */
+
+    /* while(!done) */
+    /* { */
+    /*     glGetQueryObjectiv(querries[0], GL_QUERY_RESULT_AVAILABLE, &done); */
+    /* } */
+
+    /* glGetQueryObjectui64v(querries[0], GL_QUERY_RESULT, &primitivesNum); */
+
+    /* std::cout << "number of primitives: " << primitivesNum << std::endl; */
+
     /* TextureSetup(widthImg, heightImg, shaderProgramTess, *data); */
 
     /* shaderProgramTess.Activate(); */
@@ -182,7 +205,7 @@ int main()
 
     float time = 0;
 
-    std::cout << "before loop";
+    /* std::cout << "before loop"; */
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -192,14 +215,73 @@ int main()
 
         //just wireframe testing
         /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
+
+        wave.GenWave(*data, time);
+
+        unsigned int texture;
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        // set the texture wrapping/filtering options (on the currently bound texture object)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        // load and generate the texture
+        if (data)
+        {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+            glGenerateMipmap(GL_TEXTURE_2D);
+        }
+        else
+        {
+            std::cout << "Failed to load texture" << std::endl;
+        }
+
+
+        auto start = std::chrono::high_resolution_clock::now();
+
         shaderProgramTess.Activate(); 
         camera.Matrix(45.5f, 0.1f, 10000.0f, shaderProgramTess, "PV");
         camera.Inputs(window, scale);
+
+        int done = 0; 
+
+        glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, feedbackID);
+
         VAOTess.Bind();
+        glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, VBOTess.ID);
+
+        glEnable(GL_RASTERIZER_DISCARD);
+        glBeginQuery(GL_PRIMITIVES_GENERATED, querries[0]);
+        glBeginTransformFeedback(GL_TRIANGLES);
+
         glDrawArrays(GL_PATCHES, 0, 4*patchNum*patchNum); //maybe wrong
+                                                          
+        glEndTransformFeedback();
+        glEndQuery(GL_PRIMITIVES_GENERATED);
+
+        while(!done)
+        {
+            glGetQueryObjectiv(querries[0], GL_QUERY_RESULT_AVAILABLE, &done);
+        }
+        glGetQueryObjectiv(querries[0], GL_QUERY_RESULT, &primitivesNum);
+
+        glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
+        glDisable(GL_RASTERIZER_DISCARD);
+                                                          
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
+
+        /* glGetQueryObjectui64v(querries[1], GL_QUERY_RESULT, &primitivesNum); */
+
+        std::cout << "primitives generated after tessalation: " << primitivesNum << std::endl;
+
+        /* auto stop = std::chrono::high_resolution_clock::now(); */
+        /* auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start); */
+        /* std::cout << "time needed: " << duration.count() << " microseconds" << std::endl; */
+        break;
         
         /* std::cout << "x: " << camera.Position.x << " y: " << camera.Position.y << " z: " << camera.Position.z << std::endl; */
 	}
