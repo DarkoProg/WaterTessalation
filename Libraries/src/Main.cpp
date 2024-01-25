@@ -176,8 +176,8 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgramTess, int* d
 
 int main()
 {
-    int widthImg = 1000;
-    int heightImg= 1000;
+    int widthImg = 100;
+    int heightImg= 100;
     /* std::cout << "before wave data"; */
     Wave wave(widthImg, heightImg);
     /* Wave wave; */
@@ -187,7 +187,7 @@ int main()
     wave.GenWave(*data, 0);
     const unsigned int NUM_STRIPS = heightImg-1;
     const unsigned int NUM_VERTS_PER_STRIP = widthImg*2;
-    bool gpu = true;
+    bool gpu = false;
     unsigned patchNum = 10;
     std::cout << "before arrays";
     MakePatches(patchNum, widthImg, heightImg);
@@ -259,6 +259,7 @@ int main()
         {
             shaderProgramCPU.Activate();
             GenCPUdata(data);
+            std::cout << "cpu vertices: " << verticesCPU.size()/3 << std::endl;
             VBOCpu.Bind();
             VBOCpu.Buffer(verticesCPU, verticesCPU.size()*sizeof(GLfloat));
             VBOCpu.Unbind();
