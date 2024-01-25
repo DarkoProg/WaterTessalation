@@ -37,7 +37,7 @@ std::vector<GLuint> indices;
 
 void MakePatches(int patchNum, int imgHeight, int imgWidth)
 {
-   /* verticesTess.clear(); */
+   verticesTess.clear();
    for(int i = 0; i < patchNum; i++)
    {
         for(int j = 0; j < patchNum; j++)
