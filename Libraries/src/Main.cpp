@@ -156,7 +156,7 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgramTess, int* d
 
     if (*data)
     {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, widthImg, heightImg, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     /* glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE ); */
     /* glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST ); */
     /* glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR ); */
@@ -174,16 +174,16 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgramTess, int* d
 
 int main()
 {
-    int widthImg = 500;
-    int heightImg= 500;
+    int widthImg = 100;
+    int heightImg= 100;
     Wave wave(widthImg, heightImg);
     /* int data[widthImg] [heightImg]; */
-    int data[500] [500];
+    int data[100] [100];
     std::cout << "before wave data";
     wave.GenWave(*data, 0);
     const unsigned int NUM_STRIPS = heightImg-1;
     const unsigned int NUM_VERTS_PER_STRIP = widthImg*2;
-    bool gpu = false;
+    bool gpu = true;
     unsigned patchNum = 10;
     std::cout << "before arrays";
     MakePatches(patchNum, widthImg, heightImg);
