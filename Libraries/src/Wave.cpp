@@ -25,9 +25,9 @@ void Wave::GenWave(int (*waveTexture), float t)
                 float amplitude = 100;
                 float wavePointValue = SelectWaves(x, y, t, 1, 5, amplitude, 10, glm::vec3(-0.5f, -0.5f, 0)); 
 
-                /* float colorValue = MapToGrayscale(amplitude, wavePointValue); */ 
-                float perlinValue = perlinModule.GetValue(x*100, y*100, 0);
-            float colorValue = (perlinValue)*255; 
+                float colorValue = MapToGrayscale(amplitude, wavePointValue); 
+                /* float perlinValue = perlinModule.GetValue(x*100, y*100, 0); */
+            /* float colorValue = (perlinValue)*255; */ 
                 if (maxValue < colorValue) maxValue = colorValue;
                 if (minValue > colorValue) minValue = colorValue;
 

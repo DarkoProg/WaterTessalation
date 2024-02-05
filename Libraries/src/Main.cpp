@@ -222,7 +222,7 @@ int main()
     /* shaderProgramTess.Activate(); */
 
     float scale = 0.5f;
-    Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
+    Camera camera(width, height, glm::vec3(10.0f, 25.0f, 2.0f));
 
     float time = 0;
 
@@ -238,7 +238,7 @@ int main()
 
 
         //just wireframe testing
-        /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         if(gpu)
         {
             shaderProgramTess.Activate(); 
@@ -272,8 +272,8 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
-        (time < 1000) ? time += 0.02f : time = 0;
-        std::cout << time << std::endl;
+        /* (time < 1000) ? time += 0.02f : time = 0; */
+        /* std::cout << time << std::endl; */
         
         /* std::cout << "x: " << camera.Position.x << " y: " << camera.Position.y << " z: " << camera.Position.z << std::endl; */
 	}
