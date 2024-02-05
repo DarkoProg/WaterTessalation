@@ -18,6 +18,25 @@ void Wave::GenWave(int (*waveTexture), float t)
     float maxValue = 0;
     float minValue = 0;
 
+      /* utils::NoiseMapBuilderPlane heightMapBuilder; */
+      /* heightMapBuilder.SetSourceModule (perlinModule); */
+      /* heightMapBuilder.SetDestNoiseMap (perlinMap); */
+      /* heightMapBuilder.SetDestSize (height, width); */
+      /* heightMapBuilder.SetBounds (2.0, 10.0, 1.0, 10.0); */
+      /* heightMapBuilder.Build (); */
+      
+      /* renderer.SetSourceNoiseMap (perlinMap); */
+      /* renderer.SetDestImage (image); */
+      /* renderer.Render (); */
+
+      /* utils::WriterBMP writer; */
+      /* writer.SetSourceImage (image); */
+      /* writer.SetDestFilename ("tutorial.bmp"); */
+      /* writer.WriteDestFile (); */
+
+        /* perlinModule.SetOctaveCount(6); */
+        /* perlinModule.SetFrequency(4); */
+
         for(int y = 1; y <= height; y++)
         {
             for (int x = 1; x <= width; x++) {
@@ -25,9 +44,10 @@ void Wave::GenWave(int (*waveTexture), float t)
                 float amplitude = 100;
                 float wavePointValue = SelectWaves(x, y, t, 1, 5, amplitude, 10, glm::vec3(-0.5f, -0.5f, 0)); 
 
-                float colorValue = MapToGrayscale(amplitude, wavePointValue); 
-                /* float perlinValue = perlinModule.GetValue(x*100, y*100, 0); */
-            /* float colorValue = (perlinValue)*255; */ 
+                float perlinValue = (perlinModule.GetValue((float)x/width, (float)y/height, 0)+1)/2;
+                /* std::cout << "Perlin: " << perlinValue << std::endl; */
+                float colorValue = MapToGrayscale(amplitude, wavePointValue)* perlinValue; 
+                /* float colorValue = (perlinValue)*255; */ 
                 if (maxValue < colorValue) maxValue = colorValue;
                 if (minValue > colorValue) minValue = colorValue;
 

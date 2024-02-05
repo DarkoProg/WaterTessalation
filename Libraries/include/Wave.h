@@ -5,6 +5,8 @@
 #include <glm/ext/vector_float3.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <noise/noise.h>
+#include "noiseutils.h"
+/* #include "noiseutils.h" */
 #include <noise/module/perlin.h>
 #include <iostream>
 #include <cmath>
@@ -28,6 +30,9 @@ private:
 
 
     module::Perlin perlinModule;
+    utils::NoiseMap perlinMap;
+    utils::RendererImage renderer;
+    utils::Image image;
 
 
 

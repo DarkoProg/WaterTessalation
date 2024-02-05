@@ -174,11 +174,11 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgramTess, int* d
 
 int main()
 {
-    int widthImg = 100;
-    int heightImg= 100;
+    int widthImg = 200;
+    int heightImg= 200;
     Wave wave(widthImg, heightImg);
     /* int data[widthImg] [heightImg]; */
-    int data[100] [100];
+    int data[200] [200];
     std::cout << "before wave data";
     wave.GenWave(*data, 0);
     const unsigned int NUM_STRIPS = heightImg-1;
@@ -238,7 +238,7 @@ int main()
 
 
         //just wireframe testing
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
         if(gpu)
         {
             shaderProgramTess.Activate(); 
@@ -272,6 +272,8 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
+        time+=0.005;
+        /* break; */
         /* (time < 1000) ? time += 0.02f : time = 0; */
         /* std::cout << time << std::endl; */
         
