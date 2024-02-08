@@ -5,8 +5,6 @@
 #include <glm/ext/vector_float3.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <noise/noise.h>
-#include "noiseutils.h"
-/* #include "noiseutils.h" */
 #include <noise/module/perlin.h>
 #include <iostream>
 #include <cmath>
@@ -30,11 +28,6 @@ private:
 
 
     module::Perlin perlinModule;
-    utils::NoiseMap perlinMap;
-    utils::RendererImage renderer;
-    utils::Image image;
-
-
 
 
 public:
@@ -47,14 +40,9 @@ public:
     Wave();
     Wave(int inputHeight, int inputWidth);
 
-    /* template<typename T, std::size_t N, std::size_t M> */
-    void GenWave(int (*waveTexture), float t);
-    /* void test(); */
+    /* void GenWave(int (*waveTexture), float t); */
+    void GenWave(int (*waveTexture), float t, float k, float wavelength, float amplitude, float speed, glm::vec3 direction);
     double SelectWaves(float x, float y, float t, float k, float wavelength, float amplitude, float speed, glm::vec3 direction);
-    glm::mat3 Surf2World(int x, int y, double waveDerivitive);
-    glm::mat3 Tex2Surf();
-    glm::vec3 CalculateCircularDirection(glm::vec3 direction, glm::vec3 center);
-    float Frequency(float wavelength);
     int MapToGrayscale(float amplitude, double wave);
 };
 

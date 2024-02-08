@@ -180,7 +180,8 @@ int main()
     /* int data[widthImg] [heightImg]; */
     int data[200] [200];
     std::cout << "before wave data";
-    wave.GenWave(*data, 0);
+    /* wave.GenWave(*data, 0); */
+    /* wave.GenWave(*data, 0, 1, 5, 100, 10, glm::vec3(-0.5f, -0.5f, 0)); */
     const unsigned int NUM_STRIPS = heightImg-1;
     const unsigned int NUM_VERTS_PER_STRIP = widthImg*2;
     bool gpu = true;
@@ -233,7 +234,8 @@ int main()
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        wave.GenWave(*data, time);
+/* void Wave::GenWave(int (*waveTexture), float t, float k, float wavelength, float amplitude, float speed, glm::vec3 direction) */
+        wave.GenWave(*data, time, 5, 20, 3, 5, glm::vec3(-0.5f, -0.5f, 0));
         TextureSetup(widthImg, heightImg, shaderProgramTess, *data);
 
 

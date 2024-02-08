@@ -13,40 +13,23 @@ Wave::Wave(int inputHeight, int inputWidth)
     width  = inputWidth;
 }
 
-void Wave::GenWave(int (*waveTexture), float t)
+void Wave::GenWave(int (*waveTexture), float t, float k, float wavelength, float amplitude, float speed, glm::vec3 direction)
 {
     float maxValue = 0;
     float minValue = 0;
-
-      /* utils::NoiseMapBuilderPlane heightMapBuilder; */
-      /* heightMapBuilder.SetSourceModule (perlinModule); */
-      /* heightMapBuilder.SetDestNoiseMap (perlinMap); */
-      /* heightMapBuilder.SetDestSize (height, width); */
-      /* heightMapBuilder.SetBounds (2.0, 10.0, 1.0, 10.0); */
-      /* heightMapBuilder.Build (); */
-      
-      /* renderer.SetSourceNoiseMap (perlinMap); */
-      /* renderer.SetDestImage (image); */
-      /* renderer.Render (); */
-
-      /* utils::WriterBMP writer; */
-      /* writer.SetSourceImage (image); */
-      /* writer.SetDestFilename ("tutorial.bmp"); */
-      /* writer.WriteDestFile (); */
-
-        /* perlinModule.SetOctaveCount(6); */
-        /* perlinModule.SetFrequency(4); */
 
         for(int y = 1; y <= height; y++)
         {
             for (int x = 1; x <= width; x++) {
 
-                float amplitude = 100;
-                float wavePointValue = SelectWaves(x, y, t, 1, 5, amplitude, 10, glm::vec3(-0.5f, -0.5f, 0)); 
+                /* float amplitude = 100; */
+                /* float wavePointValue = SelectWaves(x, y, t, 1, 5, amplitude, 10, glm::vec3(-0.5f, -0.5f, 0)); */ 
+                float wavePointValue = SelectWaves(x, y, t, k, wavelength, amplitude, speed, direction); 
 
                 float perlinValue = (perlinModule.GetValue((float)x/width, (float)y/height, 0)+1)/2;
                 /* std::cout << "Perlin: " << perlinValue << std::endl; */
-                float colorValue = MapToGrayscale(amplitude, wavePointValue)* perlinValue; 
+                /* float colorValue = MapToGrayscale(amplitude, wavePointValue)* perlinValue; */ 
+                float colorValue = MapToGrayscale(amplitude, wavePointValue); 
                 /* float colorValue = (perlinValue)*255; */ 
                 if (maxValue < colorValue) maxValue = colorValue;
                 if (minValue > colorValue) minValue = colorValue;
