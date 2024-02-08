@@ -28,8 +28,8 @@ void Wave::GenWave(int (*waveTexture), float t, float k, float wavelength, float
 
                 float perlinValue = (perlinModule.GetValue((float)x/width, (float)y/height, 0)+1)/2;
                 /* std::cout << "Perlin: " << perlinValue << std::endl; */
-                /* float colorValue = MapToGrayscale(amplitude, wavePointValue)* perlinValue; */ 
-                float colorValue = MapToGrayscale(amplitude, wavePointValue); 
+                float colorValue = MapToGrayscale(amplitude, wavePointValue)* perlinValue; 
+                /* float colorValue = MapToGrayscale(amplitude, wavePointValue); */ 
                 /* float colorValue = (perlinValue)*255; */ 
                 if (maxValue < colorValue) maxValue = colorValue;
                 if (minValue > colorValue) minValue = colorValue;

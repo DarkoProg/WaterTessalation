@@ -174,11 +174,11 @@ void TextureSetup(int widthImg, int heightImg, Shader& shaderProgramTess, int* d
 
 int main()
 {
-    int widthImg = 200;
-    int heightImg= 200;
+    int widthImg = 300;
+    int heightImg= 300;
     Wave wave(widthImg, heightImg);
     /* int data[widthImg] [heightImg]; */
-    int data[200] [200];
+    int data[300] [300];
     std::cout << "before wave data";
     /* wave.GenWave(*data, 0); */
     /* wave.GenWave(*data, 0, 1, 5, 100, 10, glm::vec3(-0.5f, -0.5f, 0)); */
@@ -223,7 +223,7 @@ int main()
     /* shaderProgramTess.Activate(); */
 
     float scale = 0.5f;
-    Camera camera(width, height, glm::vec3(10.0f, 25.0f, 2.0f));
+    Camera camera(width, height, glm::vec3(250.0f, 100.0f, 250.0f));
 
     float time = 0;
 
@@ -235,7 +235,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
 /* void Wave::GenWave(int (*waveTexture), float t, float k, float wavelength, float amplitude, float speed, glm::vec3 direction) */
-        wave.GenWave(*data, time, 5, 20, 3, 5, glm::vec3(-0.5f, -0.5f, 0));
+        wave.GenWave(*data, time, 5, 20, 3, 50, glm::vec3(-0.5f, -0.5f, 0));
         TextureSetup(widthImg, heightImg, shaderProgramTess, *data);
 
 
@@ -274,7 +274,7 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
-        time+=0.005;
+        /* time+=0.005; */
         /* break; */
         /* (time < 1000) ? time += 0.02f : time = 0; */
         /* std::cout << time << std::endl; */
