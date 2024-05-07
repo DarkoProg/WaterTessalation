@@ -1,18 +1,1 @@
-# diplomska_WaterTessalation
-
-
-GOALS:
-
-1. [ ] Implement wave function:
-    - [x] basic wave    
-    - [ ] multiple waves
-    - [ ] circular waves
-2. [x] Transform wave values to gray color.
-3. [ ] What to do with perlin noise.
-4. [x] implement textures into shader
-5. [ ] Implement tessalation shader.
-6. [ ] Build UI
-7. [ ] Make Camera
-
-
-:memo: NEXT -> implement PVM in Main.cpp 
+OpenGl application for running a wave simulation. The waves are being created with the sine wave formula, modified with perlin noise and sasved as an image. We later use that image in the tessalation phase to construct a wave.
